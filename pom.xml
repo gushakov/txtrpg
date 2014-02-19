@@ -8,6 +8,8 @@
     <artifactId>txtrpg</artifactId>
     <version>0.1</version>
 
+    <!-- test -->
+
     <dependencies>
         <!-- COMPILE -->
 
