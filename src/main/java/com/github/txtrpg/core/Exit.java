@@ -8,15 +8,13 @@ import org.springframework.data.neo4j.annotation.StartNode;
 /**
  * @author gushakov
  */
-@RelationshipEntity(type = "EXIT")
+@RelationshipEntity
 public class Exit {
 
     @GraphId
     private Long id;
 
     private Dir dir;
-
-    private String name;
 
     @StartNode
     private Scene from;
@@ -29,14 +27,6 @@ public class Exit {
 
     public Exit(Dir dir, Scene from, Scene to) {
         this.dir = dir;
-        this.name = dir.name();
-        this.from = from;
-        this.to = to;
-    }
-
-    public Exit(Dir dir, String name, Scene from, Scene to) {
-        this.dir = dir;
-        this.name = name;
         this.from = from;
         this.to = to;
     }
@@ -47,10 +37,6 @@ public class Exit {
 
     public Dir getDir() {
         return dir;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public Scene getFrom() {
@@ -81,5 +67,10 @@ public class Exit {
     @Override
     public int hashCode() {
         return id != null ? id.hashCode() : super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return "Exit: " + id + " from " + from + " via " + dir + " to " + to;
     }
 }
