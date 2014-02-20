@@ -1,5 +1,6 @@
 package com.github.txtrpg.core;
 
+import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -22,8 +23,8 @@ public class Scene {
 
     private String name;
 
-    @RelatedToVia
-    private @Fetch Set<Exit> exits;
+    @RelatedToVia(type = "EXIT_TO", direction = Direction.OUTGOING, elementClass = Exit.class)
+    private Set<Exit> exits;
 
     public Scene() {
     }
@@ -45,8 +46,8 @@ public class Scene {
         return exits;
     }
 
-    public void addExit(Exit exit) {
-        exits.add(exit);
+    public void addExit(Dir dir, Scene to) {
+        exits.add(new Exit(dir, this, to));
     }
 
     @Override

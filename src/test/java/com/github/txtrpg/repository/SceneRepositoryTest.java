@@ -3,11 +3,8 @@ package com.github.txtrpg.repository;
 import com.github.txtrpg.core.Dir;
 import com.github.txtrpg.core.Exit;
 import com.github.txtrpg.core.Scene;
-import org.hamcrest.CoreMatchers;
-import org.hamcrest.Matchers;
 import org.hamcrest.collection.IsIterableWithSize;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -18,23 +15,19 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.config.EnableNeo4jRepositories;
 import org.springframework.data.neo4j.config.Neo4jConfiguration;
-import org.springframework.data.neo4j.core.GraphDatabase;
-import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
 
 /**
  * @author gushakov
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
-//@Transactional
 public class SceneRepositoryTest {
 
     @Configuration
@@ -42,7 +35,7 @@ public class SceneRepositoryTest {
     public static class TestConfig extends Neo4jConfiguration {
 
         @Bean
-        public GraphDatabaseService graphDatabaseService(){
+        public GraphDatabaseService graphDatabaseService() {
             return new TestGraphDatabaseFactory().newImpermanentDatabase();
         }
 
@@ -52,42 +45,47 @@ public class SceneRepositoryTest {
     private GraphDatabaseService graphDb;
 
     @Autowired
-    private SceneRepository sceneRepository;
-
-    @Autowired
-    private Neo4jTemplate neo4jTemplate;
+    private SceneRepository repository;
 
 
     @Test
     public void testSetup() throws Exception {
         assertThat(graphDb, notNullValue());
-        assertThat(sceneRepository, notNullValue());
-        assertThat(neo4jTemplate, notNullValue());
-        assertThat(sceneRepository.count(), equalTo(0L));
+        assertThat(repository, notNullValue());
+        assertThat(repository.count(), equalTo(0L));
     }
 
     @Test
     public void testSave() throws Exception {
 
-        Transaction tx = graphDb.beginTx();
-        try {
-            Scene s1 = sceneRepository.save(new Scene("Dark Forest"));
-            Scene s2 = sceneRepository.save(new Scene("Dark Forest Path"));
-            Exit e1 = new Exit(Dir.n, s1, s2);
-            s1.addExit(e1);
-            Exit e2 = new Exit(Dir.s, s2, s1);
-            s2.addExit(e2);
-            sceneRepository.save(s1);
-            sceneRepository.save(s2);
-
+        Transaction tx = null;
+        try  {
+            tx = graphDb.beginTx();
+            Scene s1 = new Scene("s1");
+            Scene s2 = new Scene("s2");
+            repository.save(Arrays.asList(s1, s2));
+            s1.addExit(Dir.n, s2);
+            repository.save(Arrays.asList(s1, s2));
             tx.success();
         }
+        catch (Exception e){
+e.printStackTrace();
+            if (tx != null) {
+                tx.failure();
+            }
+        }
         finally {
-            tx.finish();
+           if (tx != null) {
+               tx.finish();
+           }
         }
 
-       assertThat(sceneRepository.count(), equalTo(2L));
-       assertThat(sceneRepository.findByExitsDir(Dir.n), IsIterableWithSize.<Exit>iterableWithSize(1));
+        assertThat(repository.count(), greaterThan(0L));
+        assertThat(repository.findById(1L), is(repository.findByName("s1")));
+        assertThat(repository.findById(2L), is(repository.findByName("s2")));
+        assertThat(repository.findByExitTo(repository.findById(1L), Dir.n),
+                is(repository.findById(2L)));
+
 
     }
 
