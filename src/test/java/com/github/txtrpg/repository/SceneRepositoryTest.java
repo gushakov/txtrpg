@@ -59,7 +59,7 @@ public class SceneRepositoryTest {
     public void testSave() throws Exception {
 
         Transaction tx = null;
-        try  {
+        try {
             tx = graphDb.beginTx();
             Scene s1 = new Scene("s1");
             Scene s2 = new Scene("s2");
@@ -67,17 +67,15 @@ public class SceneRepositoryTest {
             s1.addExit(Dir.n, s2);
             repository.save(Arrays.asList(s1, s2));
             tx.success();
-        }
-        catch (Exception e){
-e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             if (tx != null) {
                 tx.failure();
             }
-        }
-        finally {
-           if (tx != null) {
-               tx.finish();
-           }
+        } finally {
+            if (tx != null) {
+                tx.finish();
+            }
         }
 
         assertThat(repository.count(), greaterThan(0L));
@@ -85,7 +83,6 @@ e.printStackTrace();
         assertThat(repository.findById(2L), is(repository.findByName("s2")));
         assertThat(repository.findByExitTo(repository.findById(1L), Dir.n),
                 is(repository.findById(2L)));
-
 
     }
 
