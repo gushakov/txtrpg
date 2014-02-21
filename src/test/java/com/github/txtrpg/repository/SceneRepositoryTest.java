@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
  * @author gushakov
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration
+@ContextConfiguration(classes = {SceneRepositoryTest.TestConfig.class})
 public class SceneRepositoryTest {
 
     @Configuration
@@ -57,38 +57,25 @@ public class SceneRepositoryTest {
 
     @Test
     public void testSave() throws Exception {
-
-        Transaction tx = null;
-        try {
-            tx = graphDb.beginTx();
+        try (Transaction tx = graphDb.beginTx()) {
+            Scene s0 = new Scene("s0");
             Scene s1 = new Scene("s1");
-            Scene s2 = new Scene("s2");
-            repository.save(Arrays.asList(s1, s2));
-            s1.addExit(Dir.n, s2);
-            repository.save(Arrays.asList(s1, s2));
+            repository.save(Arrays.asList(s0, s1));
+            s0.addExit(Dir.n, s1);
+            repository.save(Arrays.asList(s0, s1));
             tx.success();
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (tx != null) {
-                tx.failure();
-            }
-        } finally {
-            if (tx != null) {
-                tx.finish();
-            }
         }
 
         assertThat(repository.count(), greaterThan(0L));
+        assertThat(repository.findById(0L), is(repository.findByName("s0")));
         assertThat(repository.findById(1L), is(repository.findByName("s1")));
-        assertThat(repository.findById(2L), is(repository.findByName("s2")));
-        assertThat(repository.findByExitTo(repository.findById(1L), Dir.n),
-                is(repository.findById(2L)));
+        assertThat(repository.findByExitTo(repository.findById(0L), Dir.n),
+                is(repository.findById(1L)));
 
     }
 
     @After
     public void tearDown() throws Exception {
         graphDb.shutdown();
-
     }
 }
