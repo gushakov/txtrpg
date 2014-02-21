@@ -7,6 +7,7 @@
     </appender>
 
     <logger name="org.springframework.data.neo4j" level="DEBUG"/>
+    <logger name="com.github.txtrpg" level="DEBUG"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
