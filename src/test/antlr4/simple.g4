@@ -1,7 +1,7 @@
 grammar Simple;
 
 @header{
-    package com.github.txtrpg.antlr;
+    package com.github.txtrpg.antlr4;
 }
 
 // grammar tree
