@@ -1,5 +1,7 @@
 package com.github.txtrpg.core;
 
+import com.github.txtrpg.utils.ConsoleUtils;
+
 import java.io.PrintWriter;
 
 /**
@@ -13,7 +15,7 @@ public class Player {
     }
 
     public void sendMessage(String message) {
-        socketWriter.println(message);
+        socketWriter.println(ConsoleUtils.color(message));
     }
 
     public void updateStatus(){

@@ -5,5 +5,5 @@ package com.github.txtrpg.core;
  * @author gushakov
  */
 public enum Dir {
-    n, ne, e, se, s, sw, w, nw, u, d, l, r
+    n, e, s, w, u, d
 }
