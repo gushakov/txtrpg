@@ -16,7 +16,7 @@ import java.io.StringReader;
  */
 public class CommandParserTest {
 
-    public class CommandListener extends SimpleBaseListener {
+    /*public class CommandListener extends SimpleBaseListener {
 
         @Override
         public void enterCommand(@NotNull SimpleParser.CommandContext ctx) {
@@ -38,6 +38,6 @@ public class CommandParserTest {
 
 
 
-    }
+    }*/
 
 }
