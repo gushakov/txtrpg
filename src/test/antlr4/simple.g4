@@ -6,6 +6,11 @@ grammar Simple;
 
 // grammar tree
 
+
+command : move
+    | 'look'
+    ;
+
 move : NORTH
  | EAST
  | SOUTH
