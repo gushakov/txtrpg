@@ -89,6 +89,12 @@
             <version>4.2</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.uuid</groupId>
+            <artifactId>java-uuid-generator</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+
         <!-- RUNTIME -->
 
         <dependency>
@@ -161,12 +167,22 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.antlr</groupId>
                 <artifactId>antlr4-maven-plugin</artifactId>
                 <version>4.2</version>
                 <configuration>
                     <sourceDirectory>${basedir}/src/test/antlr4</sourceDirectory>
-                    <outputDirectory>${project.build.directory}/generated-test-sources/com/github/txtrpg/antlr</outputDirectory>
+                    <!--<outputDirectory>${project.build.directory}/generated-test-sources/com/github/txtrpg/antlr</outputDirectory>-->
+                    <outputDirectory>${basedir}/gen/com/github/txtrpg/antlr4</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>

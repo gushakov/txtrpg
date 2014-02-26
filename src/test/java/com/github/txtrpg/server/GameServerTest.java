@@ -23,8 +23,6 @@ public class GameServerTest {
     @Test
     public void testStartServer() throws Exception {
        assertThat(server, notNullValue());
-
        server.start();
-
     }
 }

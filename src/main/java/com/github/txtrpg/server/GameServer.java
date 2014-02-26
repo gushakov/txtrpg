@@ -1,13 +1,17 @@
 package com.github.txtrpg.server;
 
+import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.World;
+import com.github.txtrpg.tasks.DaemonTask;
 import com.github.txtrpg.tasks.PlayerInputTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
@@ -17,13 +21,18 @@ import java.net.Socket;
 /**
  * @author gushakov
  */
+
+@Component
 public class GameServer {
     private static final Logger logger = LoggerFactory.getLogger(GameServer.class);
 
     private World world;
 
     @Autowired
-    private ThreadPoolTaskExecutor playersTaskExecutor;
+    private ThreadPoolTaskExecutor commandsTaskExecutor;
+
+    @Autowired
+    private ActionProcessor actionProcessor;
 
     @Autowired
     private ThreadPoolTaskScheduler daemonScheduler;
@@ -31,11 +40,7 @@ public class GameServer {
     @PostConstruct
     public void init(){
         world = new World();
-
-//        logger.debug("Starting daemon thread");
-//        daemonScheduler.scheduleAtFixedRate(()->{
-//            logger.debug("Daemon running");
-//        }, 1000);
+        daemonScheduler.scheduleAtFixedRate(new DaemonTask(world, actionProcessor), 1000);
     }
 
     public void start() throws IOException {
@@ -55,7 +60,7 @@ public class GameServer {
                     player.updateStatus();
                     String rawInput = null;
                     while ((rawInput = socketReader.readLine()) != null) {
-                        playersTaskExecutor.submit(new PlayerInputTask(world, rawInput));
+                        commandsTaskExecutor.submit(new PlayerInputTask(world, rawInput, actionProcessor));
                         player.updateStatus();
                     }
 

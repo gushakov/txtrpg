@@ -48,28 +48,6 @@ public class Exit {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        boolean answer = false;
-
-        if (obj != null && obj.getClass() == this.getClass()){
-            if (id == null){
-               answer = super.equals(obj);
-            }
-            else {
-               answer = id.equals(((Exit)obj).id);
-            }
-        }
-
-        return answer;
-
-    }
-
-    @Override
-    public int hashCode() {
-        return id != null ? id.hashCode() : super.hashCode();
-    }
-
-    @Override
     public String toString() {
         return "Exit: " + id + " from " + from + " via " + dir + " to " + to;
     }

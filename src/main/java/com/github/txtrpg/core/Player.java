@@ -7,22 +7,12 @@ import java.io.PrintWriter;
 /**
  * @author gushakov
  */
-public class Player implements Actor {
-
-    private Scene location;
+public class Player extends Actor {
 
     private PrintWriter socketWriter;
 
     public Player(PrintWriter socketWriter) {
         this.socketWriter = socketWriter;
-    }
-
-    public Scene getLocation() {
-        return location;
-    }
-
-    public void setLocation(Scene location) {
-        this.location = location;
     }
 
     public void sendMessage(String message) {

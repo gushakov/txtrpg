@@ -1,4 +1,7 @@
-package com.github.txtrpg.core;
+package com.github.txtrpg.actions;
+
+import com.github.txtrpg.core.Actor;
+import com.github.txtrpg.core.Scene;
 
 import java.time.LocalDateTime;
 
@@ -7,7 +10,7 @@ import java.time.LocalDateTime;
  */
 public class Action {
 
-    private String name;
+    private ActionName name;
 
     private LocalDateTime time;
 
@@ -15,11 +18,15 @@ public class Action {
 
     private Actor initiator;
 
-    public String getName() {
+    public Action(ActionName name) {
+        this.name = name;
+    }
+
+    public ActionName getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(ActionName name) {
         this.name = name;
     }
 

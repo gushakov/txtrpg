@@ -1,11 +1,9 @@
 grammar Command;
 
+
 @header{
     package com.github.txtrpg.antlr4;
-}
-
-@parser::header {
-    import com.github.txtrpg.core.Action;
+    import com.github.txtrpg.actions.Action;
 }
 
 // grammar tree
@@ -46,6 +44,7 @@ private Action action;
 
 command : move
     | look
+    | quit
     ;
 
 move : NORTH
@@ -57,6 +56,8 @@ move : NORTH
  ;
 
 look : 'look' WORD? { param1 = $WORD.text; };
+
+quit : 'quit' | 'exit';
 
 // tokens
 

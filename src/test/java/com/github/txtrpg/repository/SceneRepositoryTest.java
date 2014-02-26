@@ -47,7 +47,6 @@ public class SceneRepositoryTest {
     @Autowired
     private SceneRepository repository;
 
-
     @Test
     public void testSetup() throws Exception {
         assertThat(graphDb, notNullValue());
