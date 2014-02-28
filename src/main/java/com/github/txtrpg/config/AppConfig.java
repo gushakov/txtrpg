@@ -18,8 +18,8 @@ public class AppConfig {
     @Bean
     public ThreadPoolTaskExecutor commandsTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(2);
-        taskExecutor.setMaxPoolSize(4);
+        taskExecutor.setCorePoolSize(1);
+        taskExecutor.setMaxPoolSize(1);
         taskExecutor.setQueueCapacity(10);
         return taskExecutor;
     }
@@ -27,8 +27,8 @@ public class AppConfig {
     @Bean
     public ThreadPoolTaskExecutor actionsTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(2);
-        taskExecutor.setMaxPoolSize(4);
+        taskExecutor.setCorePoolSize(1);
+        taskExecutor.setMaxPoolSize(1);
         taskExecutor.setQueueCapacity(10);
         return taskExecutor;
     }

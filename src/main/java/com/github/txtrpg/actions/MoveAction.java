@@ -1,5 +1,6 @@
 package com.github.txtrpg.actions;
 
+import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Dir;
 
 /**
@@ -8,8 +9,8 @@ import com.github.txtrpg.core.Dir;
 public class MoveAction extends Action {
     private Dir dir;
 
-    public MoveAction() {
-        super(ActionName.move);
+    public MoveAction(Actor initiator) {
+        super(ActionName.move, initiator);
     }
 
     public Dir getDir() {

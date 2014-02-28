@@ -7,11 +7,11 @@ public class Actor extends Entity {
 
     private Scene location;
 
-    public Scene getLocation() {
+    public synchronized Scene getLocation() {
         return location;
     }
 
-    public void setLocation(Scene location) {
+    public synchronized void setLocation(Scene location) {
         this.location = location;
     }
 }

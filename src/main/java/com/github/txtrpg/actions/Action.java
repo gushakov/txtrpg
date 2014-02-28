@@ -12,45 +12,33 @@ public class Action {
 
     private ActionName name;
 
+    private Actor initiator;
+
     private LocalDateTime time;
 
     private Scene location;
 
-    private Actor initiator;
-
-    public Action(ActionName name) {
+    public Action(ActionName name, Actor initiator) {
         this.name = name;
+        this.initiator = initiator;
+        this.time = LocalDateTime.now();
+        this.location = initiator.getLocation();
     }
 
     public ActionName getName() {
         return name;
     }
 
-    public void setName(ActionName name) {
-        this.name = name;
+    public Actor getInitiator() {
+        return initiator;
     }
 
     public LocalDateTime getTime() {
         return time;
     }
 
-    public void setTime(LocalDateTime time) {
-        this.time = time;
-    }
-
     public Scene getLocation() {
         return location;
     }
 
-    public void setLocation(Scene location) {
-        this.location = location;
-    }
-
-    public Actor getInitiator() {
-        return initiator;
-    }
-
-    public void setInitiator(Actor initiator) {
-        this.initiator = initiator;
-    }
 }

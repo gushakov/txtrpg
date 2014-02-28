@@ -1,13 +1,11 @@
 package com.github.txtrpg.core;
 
 import com.fasterxml.uuid.Generators;
-import com.fasterxml.uuid.impl.TimeBasedGenerator;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * A location in the world.
@@ -25,7 +23,7 @@ public class Scene extends Entity {
 
     public Scene(String name) {
         super(name);
-        this.exits = new HashSet<Exit>();
+        this.exits = new HashSet<>();
     }
 
     public Set<Exit> getExits() {

@@ -8,13 +8,15 @@ import com.github.txtrpg.tasks.PlayerInputTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -38,7 +40,7 @@ public class GameServer {
     private ThreadPoolTaskScheduler daemonScheduler;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         world = new World();
         daemonScheduler.scheduleAtFixedRate(new DaemonTask(world, actionProcessor), 1000);
     }
@@ -58,7 +60,7 @@ public class GameServer {
                     world.setPlayer(player);
                     player.sendMessage("Welcome to the *Game*");
                     player.updateStatus();
-                    String rawInput = null;
+                    String rawInput;
                     while ((rawInput = socketReader.readLine()) != null) {
                         commandsTaskExecutor.submit(new PlayerInputTask(world, rawInput, actionProcessor));
                         player.updateStatus();

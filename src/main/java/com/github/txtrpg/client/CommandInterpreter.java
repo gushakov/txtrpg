@@ -35,11 +35,7 @@ public class CommandInterpreter extends CommandBaseListener {
     @Override
     public void enterMove(@NotNull CommandParser.MoveContext ctx) {
         logger.debug("Interpreting command: {}", ctx.getText());
-        MoveAction action = new MoveAction();
-        action.setName(ActionName.move);
-        action.setLocation(player.getLocation());
-        action.setInitiator(player);
-        action.setTime(LocalDateTime.now());
+        MoveAction action = new MoveAction(player);
         action.setDir(Dir.valueOf(ctx.getText()));
         actionProcessor.addAction(action);
         logger.debug("Constructed a command action: {}", action);
@@ -49,11 +45,7 @@ public class CommandInterpreter extends CommandBaseListener {
     @Override
     public void enterLook(@NotNull CommandParser.LookContext ctx) {
         logger.debug("Interpreting command: {}", ctx.getText());
-        LookAction action = new LookAction();
-        action.setName(ActionName.look);
-        action.setLocation(player.getLocation());
-        action.setInitiator(player);
-        action.setTime(LocalDateTime.now());
+        LookAction action = new LookAction(player);
         String param1 = parser.getParam1();
         if (param1 != null) {
             action.setTarget(new Visible() {
@@ -65,13 +57,13 @@ public class CommandInterpreter extends CommandBaseListener {
         }
         actionProcessor.addAction(action);
         logger.debug("Constructed a command action: {}", action);
-        super.exitLook(ctx);
+        super.enterLook(ctx);
     }
 
     @Override
     public void enterQuit(@NotNull CommandParser.QuitContext ctx) {
         logger.debug("Interpreting command: {}", ctx.getText());
-        QuitAction action = new QuitAction();
+        QuitAction action = new QuitAction(player);
         actionProcessor.addAction(action);
         logger.debug("Constructed a command action: {}", action);
         super.enterQuit(ctx);

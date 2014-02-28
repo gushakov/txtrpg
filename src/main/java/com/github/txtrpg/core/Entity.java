@@ -50,6 +50,6 @@ public class Entity implements Visible {
 
     @Override
     public String getDescription() {
-        return null;
+        return description;
     }
 }

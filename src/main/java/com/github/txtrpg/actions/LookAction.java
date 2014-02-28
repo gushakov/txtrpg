@@ -1,5 +1,6 @@
 package com.github.txtrpg.actions;
 
+import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Visible;
 
 /**
@@ -9,8 +10,8 @@ public class LookAction extends Action {
 
     private Visible target;
 
-    public LookAction() {
-        super(ActionName.look);
+    public LookAction(Actor initiator) {
+        super(ActionName.look, initiator);
     }
 
     public Visible getTarget() {

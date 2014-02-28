@@ -37,9 +37,6 @@ public class PlayerInputTask implements Runnable {
                 // get rid of all control characters
                 line = line.replaceAll("[\u0000-\u001f]", "");
                 logger.debug("Line to parse: {}", line);
-                if (line.equalsIgnoreCase("bye")) {
-                    System.exit(1);
-                }
                 CommandLexer lexer = new CommandLexer(new ANTLRInputStream(line));
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 CommandParser parser = new CommandParser(tokens);
