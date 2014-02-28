@@ -1,0 +1,44 @@
+[
+    {
+        "name": "s1",
+        "description": "A footpath in dark forest.",
+        "exits": [
+            {
+                "dir": "n",
+                "to": {
+                    "name": "s2"
+                }
+            }
+        ]
+    },
+    {
+        "name": "s2",
+        "description": "An oak tree in the forest.",
+        "exits": [
+            {
+                "dir": "n",
+                "to": {
+                    "name": "s3"
+                }
+            },
+            {
+                "dir": "s",
+                "to": {
+                    "name": "s1"
+                }
+            }
+        ]
+    },
+    {
+        "name": "s3",
+        "description": "A meadow.",
+        "exits": [
+            {
+                "dir": "s",
+                "to": {
+                    "name": "s2"
+                }
+            }
+        ]
+    }
+]

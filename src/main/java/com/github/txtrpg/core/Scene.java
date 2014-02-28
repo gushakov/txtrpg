@@ -34,6 +34,10 @@ public class Scene extends Entity {
         exits.add(new Exit(dir, this, to));
     }
 
+    public Exit getExit(Dir dir){
+       return exits.stream().filter(e -> e.getDir() == dir).findFirst().get();
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Scene && ((Scene) obj).getId().equals(getId());
