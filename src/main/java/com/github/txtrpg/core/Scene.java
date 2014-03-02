@@ -2,6 +2,7 @@ package com.github.txtrpg.core;
 
 import com.fasterxml.uuid.Generators;
 import org.neo4j.graphdb.Direction;
+import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 
 import java.util.HashSet;
@@ -15,10 +16,12 @@ import java.util.Set;
 public class Scene extends Entity {
 
     @RelatedToVia(type = "EXIT_TO", direction = Direction.OUTGOING, elementClass = Exit.class)
+    @Fetch
     private Set<Exit> exits;
 
     public Scene() {
-        setId(Generators.timeBasedGenerator().generate().timestamp());
+        super();
+        this.exits = new HashSet<>();
     }
 
     public Scene(String name) {
@@ -26,8 +29,17 @@ public class Scene extends Entity {
         this.exits = new HashSet<>();
     }
 
+    public Scene(String name, String description){
+        super(name, description);
+        this.exits = new HashSet<>();
+    }
+
     public Set<Exit> getExits() {
         return exits;
+    }
+
+    public void setExits(Set<Exit> exits) {
+        this.exits = exits;
     }
 
     public void addExit(Dir dir, Scene to) {
@@ -38,8 +50,4 @@ public class Scene extends Entity {
        return exits.stream().filter(e -> e.getDir() == dir).findFirst().get();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Scene && ((Scene) obj).getId().equals(getId());
-    }
 }

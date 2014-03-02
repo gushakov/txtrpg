@@ -1,21 +1,23 @@
 package com.github.txtrpg.loader;
 
+import com.github.txtrpg.core.Dir;
+import com.github.txtrpg.core.Exit;
 import com.github.txtrpg.core.Scene;
 import com.github.txtrpg.core.World;
+import com.github.txtrpg.repository.SceneRepository;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
+import org.neo4j.graphdb.GraphDatabaseService;
+import org.neo4j.graphdb.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.*;
+import java.util.Map;
 
 /**
  * @author gushakov
@@ -26,19 +28,59 @@ public class WorldLoader {
 
     private Resource scenesFileResource;
 
+    private SceneRepository repository;
+
+    private GraphDatabaseService graphDb;
+
     public void setScenesFileResource(Resource scenesFileResource) {
         this.scenesFileResource = scenesFileResource;
     }
 
+    public void setRepository(SceneRepository repository) {
+        this.repository = repository;
+    }
 
-    public World unmarshal(){
+    public void setGraphDb(GraphDatabaseService graphDb) {
+        this.graphDb = graphDb;
+    }
+
+    public World unmarshal() {
         World world = new World();
         ObjectMapper mapper = new ObjectMapper();
         try {
-            ArrayList<Scene> scenes = mapper.readValue(new ClassPathResource("scenes.json").getInputStream(), new TypeReference<List<Scene>>() {
-            });
+            ArrayList<Scene> jsonScenes = mapper.readValue(scenesFileResource.getInputStream(),
+                    new TypeReference<List<Scene>>() {
+                    });
 
-            world.setScenes(scenes.stream().collect(Collectors.<Scene, String, Scene>toMap(Scene::getName, Function.<Scene>identity())));
+
+            Map<String, Scene> scenesMap = new HashMap<>();
+
+            try (Transaction tx = graphDb.beginTx()) {
+
+                for (Scene s : jsonScenes) {
+                    Scene scene = repository.save(new Scene(s.getName(), s.getDescription()));
+                    scenesMap.put(scene.getName(), scene);
+                    logger.debug("{} {}", scene.getId(), scene.getName());
+                }
+
+
+                for (Scene s : jsonScenes) {
+                    Scene from = scenesMap.get(s.getName());
+
+                    for (Exit exit : s.getExits()) {
+                        Scene to = scenesMap.get(exit.getTo().getName());
+                        from.addExit(exit.getDir(), to);
+                    }
+
+                    repository.save(from);
+
+                }
+
+
+                tx.success();
+            }
+
+            world.setScenes(scenesMap);
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

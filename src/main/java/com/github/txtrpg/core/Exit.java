@@ -43,6 +43,10 @@ public class Exit {
         return from;
     }
 
+    public void setFrom(Scene from) {
+        this.from = from;
+    }
+
     public Scene getTo() {
         return to;
     }

@@ -2,6 +2,7 @@ package com.github.txtrpg.loader;
 
 import com.github.txtrpg.core.Dir;
 import com.github.txtrpg.core.Scene;
+import com.github.txtrpg.core.World;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.hamcrest.Matchers;
@@ -21,9 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.collection.IsIterableWithSize.iterableWithSize;
 import static org.junit.Assert.assertThat;
@@ -43,12 +41,15 @@ public class WorldLoaderTest {
 
         @Bean
         public WorldLoader worldLoader() {
-            WorldLoader parser = new WorldLoader();
-            parser.setScenesFileResource(new ClassPathResource("scenes.json"));
-            return parser;
+            WorldLoader loader = new WorldLoader();
+            loader.setScenesFileResource(new ClassPathResource("scenes.json"));
+            return loader;
         }
 
     }
+
+    @Autowired
+    private WorldLoader loader;
 
     @Test
     public void testLoadWorld() throws Exception {
@@ -70,5 +71,14 @@ public class WorldLoaderTest {
         assertThat(s2.getExit(Dir.n).getTo(), hasProperty("name", equalTo("s3")));
         assertThat(s2.getExits(), hasItem(hasProperty("dir", equalTo(Dir.s))));
         assertThat(s2.getExit(Dir.s).getTo(), hasProperty("name", equalTo("s1")));
+
+        World world = loader.unmarshal();
+
+        assertThat(world, notNullValue());
+        assertThat(world.getScenes(), notNullValue());
+        assertThat(world.getScenes().keySet(), iterableWithSize(3));
+        assertThat(world.getScenes().values(), hasItem(hasProperty("name", equalTo("s1"))));
+
+
     }
 }
