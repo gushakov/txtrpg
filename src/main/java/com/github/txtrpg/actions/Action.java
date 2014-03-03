@@ -16,13 +16,10 @@ public class Action {
 
     private LocalDateTime time;
 
-    private Scene location;
-
     public Action(ActionName name, Actor initiator) {
         this.name = name;
         this.initiator = initiator;
         this.time = LocalDateTime.now();
-        this.location = initiator.getLocation();
     }
 
     public ActionName getName() {
@@ -35,10 +32,6 @@ public class Action {
 
     public LocalDateTime getTime() {
         return time;
-    }
-
-    public Scene getLocation() {
-        return location;
     }
 
 }

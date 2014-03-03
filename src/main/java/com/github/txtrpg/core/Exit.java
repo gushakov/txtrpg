@@ -51,6 +51,10 @@ public class Exit {
         return to;
     }
 
+    public void setTo(Scene to) {
+        this.to = to;
+    }
+
     @Override
     public String toString() {
         return "Exit: " + id + " from " + from + " via " + dir + " to " + to;

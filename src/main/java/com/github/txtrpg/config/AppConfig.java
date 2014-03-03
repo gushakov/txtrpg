@@ -1,10 +1,11 @@
 package com.github.txtrpg.config;
 
+import com.github.txtrpg.actions.ActionProcessor;
+import com.github.txtrpg.json.WorldUnmarshaller;
 import com.github.txtrpg.server.GameServer;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
@@ -12,7 +13,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
  * @author gushakov
  */
 @Configuration
-@ComponentScan(basePackages = {"com.github.txtrpg"})
 public class AppConfig {
 
     @Bean
@@ -38,6 +38,30 @@ public class AppConfig {
         ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
         scheduler.setPoolSize(1);
         return scheduler;
+    }
+
+    @Bean
+    public ActionProcessor actionProcessor() {
+        ActionProcessor processor = new ActionProcessor();
+        processor.setActionsTaskExecutor(actionsTaskExecutor());
+        return processor;
+    }
+
+    @Bean
+    public WorldUnmarshaller worldUnmarshaller() {
+        WorldUnmarshaller unmarshaller = new WorldUnmarshaller();
+        unmarshaller.setScenesFileResource(new ClassPathResource("scenes.json"));
+        return unmarshaller;
+    }
+
+    @Bean
+    public GameServer gameServer() {
+        GameServer server = new GameServer();
+        server.setCommandsTaskExecutor(commandsTaskExecutor());
+        server.setActionProcessor(actionProcessor());
+        server.setDaemonScheduler(daemonScheduler());
+        server.setWorldUnmarshaller(worldUnmarshaller());
+        return server;
     }
 
 }

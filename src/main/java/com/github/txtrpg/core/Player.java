@@ -17,6 +17,7 @@ public class Player extends Actor {
 
     public void sendMessage(String message) {
         socketWriter.println(ConsoleUtils.color(message));
+        updateStatus();
     }
 
     public void updateStatus(){

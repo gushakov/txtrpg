@@ -1,16 +1,12 @@
 package com.github.txtrpg.repository;
 
 import com.github.txtrpg.core.Dir;
-import com.github.txtrpg.core.Exit;
-import com.github.txtrpg.core.Scene;
 import com.github.txtrpg.core.World;
-import com.github.txtrpg.loader.WorldLoader;
-import org.hamcrest.collection.IsIterableWithSize;
+import com.github.txtrpg.json.WorldUnmarshaller;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Transaction;
 import org.neo4j.test.TestGraphDatabaseFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,12 +17,6 @@ import org.springframework.data.neo4j.config.Neo4jConfiguration;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -54,10 +44,8 @@ public class SceneRepositoryTest {
         }
 
         @Bean
-        public WorldLoader worldLoader() {
-            WorldLoader loader = new WorldLoader();
-            loader.setRepository(repository);
-            loader.setGraphDb(graphDb);
+        public WorldUnmarshaller worldLoader() {
+            WorldUnmarshaller loader = new WorldUnmarshaller();
             loader.setScenesFileResource(new ClassPathResource("scenes.json"));
             return loader;
         }
@@ -65,7 +53,7 @@ public class SceneRepositoryTest {
     }
 
     @Autowired
-    private WorldLoader loader;
+    private WorldUnmarshaller loader;
 
     @Autowired
     private GraphDatabaseService graphDb;
@@ -75,13 +63,6 @@ public class SceneRepositoryTest {
 
     @Autowired
     private Neo4jTemplate neo4jTemplate;
-
-    @Test
-    public void testSetup() throws Exception {
-        assertThat(graphDb, notNullValue());
-        assertThat(repository, notNullValue());
-        assertThat(repository.count(), equalTo(0L));
-    }
 
     @Test
     public void testUnmarshalWorld() throws Exception {

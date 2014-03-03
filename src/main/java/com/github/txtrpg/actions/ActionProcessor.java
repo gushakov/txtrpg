@@ -14,10 +14,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 /**
  * @author gushakov
  */
-@Component
 public class ActionProcessor {
 
-    @Autowired
     private ThreadPoolTaskExecutor actionsTaskExecutor;
 
     private ConcurrentLinkedQueue<Action> actionsQueue;
