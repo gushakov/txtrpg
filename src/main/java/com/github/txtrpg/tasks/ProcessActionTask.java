@@ -3,12 +3,13 @@ package com.github.txtrpg.tasks;
 import com.github.txtrpg.actions.Action;
 import com.github.txtrpg.actions.ActionName;
 import com.github.txtrpg.actions.LookAction;
-import com.github.txtrpg.core.Player;
-import com.github.txtrpg.core.Visible;
-import com.github.txtrpg.core.World;
+import com.github.txtrpg.actions.MoveAction;
+import com.github.txtrpg.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sun.net.www.content.text.plain;
+
+import java.util.Optional;
 
 import static com.github.txtrpg.actions.ActionName.*;
 
@@ -50,6 +51,12 @@ public class ProcessActionTask implements Runnable {
     // move
     private void move() {
         logger.debug("Moving...");
+        Dir dir = ((MoveAction)action).getDir();
+        Scene from = action.getInitiator().getLocation();
+        Optional<Scene> to = from.getExitTo(dir);
+        if (to.isPresent()){
+            logger.debug("Moving from {} to {}", from, to);
+        }
     }
 
     // look

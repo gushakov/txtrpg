@@ -68,7 +68,7 @@ public class SceneRepositoryTest {
     public void testUnmarshalWorld() throws Exception {
         World world = loader.unmarshal();
         assertThat(repository.count(), equalTo(3L));
-        assertThat(repository.findByName("s1").getExit(Dir.n).getTo().getId(), equalTo(1L));
+        assertThat(repository.findByName("s1").getExit(Dir.n).get().getTo().getId(), equalTo(1L));
     }
 
     @After

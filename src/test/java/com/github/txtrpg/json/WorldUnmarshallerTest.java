@@ -49,9 +49,9 @@ public class WorldUnmarshallerTest {
         Scene s1 = world.getScenes().get("s1");
         Scene s2 = world.getScenes().get("s2");
         Scene s3 = world.getScenes().get("s3");
-        assertThat(s1.getExit(Dir.n).getTo(), equalTo(s2));
-        assertThat(s2.getExit(Dir.s).getTo(), equalTo(s1));
-        assertThat(s2.getExit(Dir.n).getTo(), equalTo(s3));
-        assertThat(s3.getExit(Dir.s).getTo(), equalTo(s2));
+        assertThat(s1.getExit(Dir.n).get().getTo(), equalTo(s2));
+        assertThat(s2.getExit(Dir.s).get().getTo(), equalTo(s1));
+        assertThat(s2.getExit(Dir.n).get().getTo(), equalTo(s3));
+        assertThat(s3.getExit(Dir.s).get().getTo(), equalTo(s2));
     }
 }

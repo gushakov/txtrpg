@@ -1,7 +1,7 @@
 [
     {
         "name": "s1",
-        "description": "A footpath in dark forest.",
+        "description": "A footpath in dark forest. A small _coin_ is laying on the ground.",
         "exits": [
             {
                 "dir": "n",

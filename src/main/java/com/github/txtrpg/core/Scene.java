@@ -5,7 +5,9 @@ import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 
+import javax.swing.text.html.Option;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -46,8 +48,13 @@ public class Scene extends Entity {
         exits.add(new Exit(dir, this, to));
     }
 
-    public Exit getExit(Dir dir){
-       return exits.stream().filter(e -> e.getDir() == dir).findFirst().get();
+    public Optional<Exit> getExit(Dir dir){
+       return exits.stream().filter(e -> e.getDir() == dir).findFirst();
+    }
+
+    public Optional<Scene> getExitTo(Dir dir) {
+        Optional<Exit> exit = exits.stream().filter(e -> e.getDir() == dir).findFirst();
+        return exit.isPresent() ? Optional.<Scene>of(exit.get().getTo()) : Optional.<Scene>empty();
     }
 
 }
