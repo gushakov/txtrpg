@@ -54,6 +54,7 @@ public class ProcessActionTask implements Runnable {
     // move
     private void move() {
         logger.debug("Moving...");
+        /*
         Dir dir = ((MoveAction)action).getDir();
         Scene from = action.getInitiator().getLocation();
         Optional<Scene> to = from.getExitTo(dir);
@@ -71,6 +72,8 @@ public class ProcessActionTask implements Runnable {
                 actionProcessor.addAction(errorAction);
             }
         }
+        */
+        action.getInitiator().doMove((MoveAction)action, actionProcessor);
     }
 
     // look
