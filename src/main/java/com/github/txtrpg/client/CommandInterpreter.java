@@ -8,6 +8,7 @@ import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.Visible;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
+import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,6 +68,16 @@ public class CommandInterpreter extends CommandBaseListener {
         actionProcessor.addAction(action);
         logger.debug("Constructed a command action: {}", action);
         super.enterQuit(ctx);
+    }
+
+    @Override
+    public void visitErrorNode(@NotNull ErrorNode node) {
+        logger.debug("Processing error command: {}", node.getText());
+        ErrorAction action = new ErrorAction(player);
+        action.setInput(node.getText());
+        actionProcessor.addAction(action);
+        logger.debug("Constructed a command action: {}", action);
+        super.visitErrorNode(node);
     }
 
     @Override

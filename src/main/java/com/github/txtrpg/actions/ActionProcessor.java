@@ -38,7 +38,7 @@ public class ActionProcessor {
         while (!done && !actionsQueue.isEmpty()){
             Action action = actionsQueue.poll();
             if (action.getTime().compareTo(clock) < 0){
-                actionsTaskExecutor.submit(new ProcessActionTask(world, action));
+                actionsTaskExecutor.submit(new ProcessActionTask(world, action, this));
             }
             else {
                 done = true;

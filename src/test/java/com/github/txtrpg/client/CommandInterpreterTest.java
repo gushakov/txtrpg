@@ -50,7 +50,6 @@ public class CommandInterpreterTest {
     private World world;
     private Player player;
     private ActionProcessor mockActionProcessor;
-    private ArgumentCaptor<Action> actionArgument;
 
     @Before
     public void setUp() throws Exception {
@@ -61,28 +60,41 @@ public class CommandInterpreterTest {
         player = new Player(mock(PrintWriter.class));
         player.setLocation(s1);
         mockActionProcessor = mock(ActionProcessor.class);
-        actionArgument = ArgumentCaptor.forClass(Action.class);
     }
 
     @Test
     public void testMove() throws Exception {
         parseCommand(player, mockActionProcessor, "n");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
         assertThat(actionArgument.getValue(), allOf(
                 hasProperty("name", equalTo(ActionName.move)),
                 hasProperty("dir", equalTo(Dir.n))
         ));
 
-        ProcessActionTask task = new ProcessActionTask(world, actionArgument.getValue());
+        ProcessActionTask task = new ProcessActionTask(world, actionArgument.getValue(), mockActionProcessor);
         task.run();
+        actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(2)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.look)));
     }
 
     @Test
     public void testLook() throws Exception {
         parseCommand(player, mockActionProcessor, "look coin");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+
         assertThat(actionArgument.getValue(), allOf(hasProperty("name", equalTo(ActionName.look)),
                 hasProperty("target", notNullValue())));
+    }
+
+    @Test
+    public void testError() throws Exception {
+        parseCommand(player, mockActionProcessor, "err");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.error)));
     }
 
     private void parseCommand(Player player, ActionProcessor mockActionProcessor, String input) {
