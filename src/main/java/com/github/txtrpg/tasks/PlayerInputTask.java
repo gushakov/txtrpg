@@ -1,10 +1,10 @@
 package com.github.txtrpg.tasks;
 
+import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.antlr4.CommandLexer;
 import com.github.txtrpg.antlr4.CommandParser;
-import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.client.CommandInterpreter;
-import com.github.txtrpg.core.World;
+import com.github.txtrpg.core.Player;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
@@ -18,12 +18,12 @@ import java.io.IOException;
  */
 public class PlayerInputTask implements Runnable {
     private static final Logger logger = LoggerFactory.getLogger(PlayerInputTask.class);
-    private World world;
+    private Player player;
     private String rawInput;
     private ActionProcessor actionProcessor;
 
-    public PlayerInputTask(World world, String rawInput, ActionProcessor actionProcessor) {
-        this.world = world;
+    public PlayerInputTask(Player player, String rawInput, ActionProcessor actionProcessor) {
+        this.player = player;
         this.rawInput = rawInput;
         this.actionProcessor = actionProcessor;
     }
@@ -40,7 +40,7 @@ public class PlayerInputTask implements Runnable {
                 CommandLexer lexer = new CommandLexer(new ANTLRInputStream(line));
                 CommonTokenStream tokens = new CommonTokenStream(lexer);
                 CommandParser parser = new CommandParser(tokens);
-                CommandInterpreter interpreter = new CommandInterpreter(world.getPlayer(), parser, actionProcessor);
+                CommandInterpreter interpreter = new CommandInterpreter(player, parser, actionProcessor);
                 ParseTreeWalker walker = new ParseTreeWalker();
                 walker.walk(interpreter, parser.command());
             }

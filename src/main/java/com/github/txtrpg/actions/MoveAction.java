@@ -9,15 +9,13 @@ import com.github.txtrpg.core.Dir;
 public class MoveAction extends Action {
     private Dir dir;
 
-    public MoveAction(Actor initiator) {
+    public MoveAction( Actor initiator, Dir dir) {
         super(ActionName.move, initiator);
+        this.dir = dir;
     }
 
     public Dir getDir() {
         return dir;
     }
 
-    public void setDir(Dir dir) {
-        this.dir = dir;
-    }
 }

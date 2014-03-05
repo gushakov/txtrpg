@@ -65,10 +65,8 @@ public class SceneRepositoryTest {
     private Neo4jTemplate neo4jTemplate;
 
     @Test
-    public void testUnmarshalWorld() throws Exception {
-        World world = loader.unmarshal();
-        assertThat(repository.count(), equalTo(3L));
-        assertThat(repository.findByName("s1").getExit(Dir.n).get().getTo().getId(), equalTo(1L));
+    public void testSave() throws Exception {
+        assertThat(repository.count(), equalTo(0L));
     }
 
     @After

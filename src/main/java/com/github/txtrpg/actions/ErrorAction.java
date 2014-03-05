@@ -1,5 +1,6 @@
 package com.github.txtrpg.actions;
 
+import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Player;
 
 /**
@@ -9,15 +10,13 @@ public class ErrorAction extends Action {
 
     private String input;
 
-    public ErrorAction(Player player) {
-        super(ActionName.error, player);
+    public ErrorAction(Actor initiator, String input) {
+        super(ActionName.error, initiator);
+        this.input = input;
     }
 
     public String getInput() {
         return input;
     }
 
-    public void setInput(String input) {
-        this.input = input;
-    }
 }

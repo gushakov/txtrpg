@@ -1,11 +1,7 @@
 package com.github.txtrpg.actions;
 
-import com.github.txtrpg.core.World;
 import com.github.txtrpg.tasks.ProcessActionTask;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
@@ -33,12 +29,12 @@ public class ActionProcessor {
         actionsQueue.add(action);
     }
 
-    public synchronized void processActions(World world, LocalDateTime clock){
+    public synchronized void processActions(LocalDateTime clock) {
         boolean done = false;
         while (!done && !actionsQueue.isEmpty()){
             Action action = actionsQueue.poll();
             if (action.getTime().compareTo(clock) < 0){
-                actionsTaskExecutor.submit(new ProcessActionTask(world, action, this));
+                actionsTaskExecutor.submit(new ProcessActionTask(action));
             }
             else {
                 done = true;

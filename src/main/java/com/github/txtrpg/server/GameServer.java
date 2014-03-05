@@ -1,6 +1,7 @@
 package com.github.txtrpg.server;
 
 import com.github.txtrpg.actions.ActionProcessor;
+import com.github.txtrpg.actions.WelcomeAction;
 import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.World;
 import com.github.txtrpg.json.WorldUnmarshaller;
@@ -54,7 +55,7 @@ public class GameServer {
     @PostConstruct
     public void init() {
         world = worldUnmarshaller.unmarshal();
-        daemonScheduler.scheduleAtFixedRate(new DaemonTask(world, actionProcessor), 500);
+        daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
     }
 
     public void start() throws IOException {
@@ -68,13 +69,12 @@ public class GameServer {
                         BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO-8859-1"))
                 ) {
                     logger.debug("Accepted connection from {}", socket.getRemoteSocketAddress());
-                    Player player = new Player(socketWriter);
+                    Player player = new Player(world.getScenes().get("s1"), actionProcessor, socketWriter);
                     world.setPlayer(player);
-                    player.setLocation(world.getScenes().get("s1"));
-                    player.sendMessage("Welcome to the *Game*");
+                    actionProcessor.addAction(new WelcomeAction(player));
                     String rawInput;
                     while ((rawInput = socketReader.readLine()) != null) {
-                        commandsTaskExecutor.submit(new PlayerInputTask(world, rawInput, actionProcessor));
+                        commandsTaskExecutor.submit(new PlayerInputTask(player, rawInput, actionProcessor));
                         player.updateStatus();
                     }
 

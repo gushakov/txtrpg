@@ -12,8 +12,6 @@ import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDateTime;
-
 /**
  * @author gushakov
  */
@@ -35,48 +33,38 @@ public class CommandInterpreter extends CommandBaseListener {
 
     @Override
     public void enterMove(@NotNull CommandParser.MoveContext ctx) {
-        logger.debug("Interpreting command: {}", ctx.getText());
-        MoveAction action = new MoveAction(player);
-        action.setDir(Dir.valueOf(ctx.getText()));
-        actionProcessor.addAction(action);
-        logger.debug("Constructed a command action: {}", action);
+        actionProcessor.addAction(new MoveAction(player, Dir.valueOf(ctx.getText())));
         super.enterMove(ctx);
     }
 
     @Override
     public void enterLook(@NotNull CommandParser.LookContext ctx) {
-        logger.debug("Interpreting command: {}", ctx.getText());
-        LookAction action = new LookAction(player);
+        LookAction action = null;
         String param1 = parser.getParam1();
         if (param1 != null) {
-            action.setTarget(new Visible() {
+            action = new LookAction(player, new Visible() {
                 @Override
                 public String getDescription() {
                     return param1;
                 }
             });
+        } else {
+            action = new LookAction(player);
         }
         actionProcessor.addAction(action);
-        logger.debug("Constructed a command action: {}", action);
         super.enterLook(ctx);
     }
 
     @Override
     public void enterQuit(@NotNull CommandParser.QuitContext ctx) {
-        logger.debug("Interpreting command: {}", ctx.getText());
         QuitAction action = new QuitAction(player);
         actionProcessor.addAction(action);
-        logger.debug("Constructed a command action: {}", action);
         super.enterQuit(ctx);
     }
 
     @Override
     public void visitErrorNode(@NotNull ErrorNode node) {
-        logger.debug("Processing error command: {}", node.getText());
-        ErrorAction action = new ErrorAction(player);
-        action.setInput(node.getText());
-        actionProcessor.addAction(action);
-        logger.debug("Constructed a command action: {}", action);
+        actionProcessor.addAction(new ErrorAction(player, node.getText()));
         super.visitErrorNode(node);
     }
 

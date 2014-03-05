@@ -14,17 +14,15 @@ public class DaemonTask implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(DaemonTask.class);
 
-    private World world;
     private ActionProcessor actionProcessor;
 
-    public DaemonTask(World world, ActionProcessor actionProcessor) {
+    public DaemonTask(ActionProcessor actionProcessor) {
         logger.debug("Created new DaemonTask {}", this);
-        this.world = world;
         this.actionProcessor = actionProcessor;
     }
 
     @Override
     public void run() {
-           actionProcessor.processActions(world, LocalDateTime.now());
+           actionProcessor.processActions(LocalDateTime.now());
     }
 }

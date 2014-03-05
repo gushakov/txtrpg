@@ -14,11 +14,13 @@ public class LookAction extends Action {
         super(ActionName.look, initiator);
     }
 
+    public LookAction(Actor initiator, Visible target) {
+        super(ActionName.look, initiator);
+        this.target = target;
+    }
+
     public Visible getTarget() {
         return target;
     }
 
-    public void setTarget(Visible target) {
-        this.target = target;
-    }
 }
