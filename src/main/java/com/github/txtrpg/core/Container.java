@@ -1,5 +1,6 @@
 package com.github.txtrpg.core;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -18,4 +19,6 @@ public interface Container<T extends Movable> {
     public boolean isFull();
 
     public boolean isEmpty();
+
+    public List<T> suggest(String prefix);
 }

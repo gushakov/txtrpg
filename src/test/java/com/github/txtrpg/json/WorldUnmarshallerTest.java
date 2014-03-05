@@ -59,9 +59,14 @@ public class WorldUnmarshallerTest {
         assertThat(s3.getExit(Dir.s).get().getTo(), is(s2));
         assertThat(s1.getGround().isFull(), is(false));
         assertThat(s1.getGround().getWeight(), is(0));
+
+        assertThat(s1.getGround().suggest("co"), iterableWithSize(3));
+        assertThat(s1.getGround().suggest("silver"), iterableWithSize(1));
+        assertThat(s1.getGround().suggest("copper"), iterableWithSize(1));
+        assertThat(s1.getGround().suggest("gold"), iterableWithSize(1));
+
         Optional<Item> c1 = s1.getGround().take("c1");
         assertThat(c1.isPresent(), is(true));
         assertThat(c1.get(), hasProperty("description", is("silver coin")));
-        assertThat(s1.getGround().isEmpty(), is(true));
     }
 }

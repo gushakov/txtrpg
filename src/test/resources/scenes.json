@@ -17,6 +17,18 @@
                     "description": "silver coin",
                     "weight": 0,
                     "price": 2
+                },
+                {
+                    "name": "c2",
+                    "description": "old copper coin",
+                    "weight": 0,
+                    "price": 1
+                },
+                {
+                    "name": "c3",
+                    "description": "shiny gold coin",
+                    "weight": 0,
+                    "price": 3
                 }
             ]
         }

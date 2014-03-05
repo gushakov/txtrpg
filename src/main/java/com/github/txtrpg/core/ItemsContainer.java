@@ -2,8 +2,12 @@ package com.github.txtrpg.core;
 
 import org.antlr.v4.runtime.misc.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * @author gushakov
@@ -23,7 +27,6 @@ public class ItemsContainer extends Item implements Container<Item> {
         super(name, description);
         this.emptyWeight = 0;
         this.capacity = Integer.MAX_VALUE;
-//        items = new ConcurrentSkipListSet<>((it1, it2) -> it1.getName().compareTo(it2.getName()));
         items = new ConcurrentSkipListSet<>();
     }
 
@@ -58,6 +61,12 @@ public class ItemsContainer extends Item implements Container<Item> {
     @Override
     public synchronized boolean isEmpty() {
         return items.isEmpty();
+    }
+
+    @Override
+    public synchronized List<Item> suggest(String prefix) {
+        Pattern pattern = Pattern.compile("^" + prefix + "|\\s+" + prefix, Pattern.CASE_INSENSITIVE);
+        return items.stream().filter(it -> pattern.matcher(it.getDescription()).find()).collect(Collectors.toList());
     }
 
     @Override
