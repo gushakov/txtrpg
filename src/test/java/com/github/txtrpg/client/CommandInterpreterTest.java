@@ -48,7 +48,7 @@ public class CommandInterpreterTest {
         Scene s2 = new Scene("s2", "Forest meadow");
         s1.addExit(Dir.n, s2);
         mockActionProcessor = mock(ActionProcessor.class);
-        player = new Player(s1, mockActionProcessor, mock(PrintWriter.class));
+        player = new Player("p1", "player", s1, mockActionProcessor, mock(PrintWriter.class));
     }
 
     @Test

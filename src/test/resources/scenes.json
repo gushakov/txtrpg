@@ -9,7 +9,17 @@
                     "name": "s2"
                 }
             }
-        ]
+        ],
+        "ground": {
+            "items": [
+                {
+                    "name": "c1",
+                    "description": "silver coin",
+                    "weight": 0,
+                    "price": 2
+                }
+            ]
+        }
     },
     {
         "name": "s2",

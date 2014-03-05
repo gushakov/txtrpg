@@ -69,7 +69,8 @@ public class GameServer {
                         BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO-8859-1"))
                 ) {
                     logger.debug("Accepted connection from {}", socket.getRemoteSocketAddress());
-                    Player player = new Player(world.getScenes().get("s1"), actionProcessor, socketWriter);
+                    Player player = new Player("p1", socket.getInetAddress().getHostName(),
+                            world.getScenes().get("s1"), actionProcessor, socketWriter);
                     world.setPlayer(player);
                     actionProcessor.addAction(new WelcomeAction(player));
                     String rawInput;

@@ -1,11 +1,9 @@
 package com.github.txtrpg.core;
 
-import com.fasterxml.uuid.Generators;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 
-import javax.swing.text.html.Option;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -21,19 +19,15 @@ public class Scene extends Entity {
     @Fetch
     private Set<Exit> exits;
 
-    public Scene() {
-        super();
-        this.exits = new HashSet<>();
+    private ItemsContainer ground;
+
+    public Scene(){
     }
 
-    public Scene(String name) {
-        super(name);
-        this.exits = new HashSet<>();
-    }
-
-    public Scene(String name, String description){
+    public Scene(String name, String description) {
         super(name, description);
         this.exits = new HashSet<>();
+        this.ground = new ItemsContainer();
     }
 
     public Set<Exit> getExits() {
@@ -44,12 +38,20 @@ public class Scene extends Entity {
         this.exits = exits;
     }
 
+    public ItemsContainer getGround() {
+        return ground;
+    }
+
+    public void setGround(ItemsContainer ground) {
+        this.ground = ground;
+    }
+
     public void addExit(Dir dir, Scene to) {
         exits.add(new Exit(dir, this, to));
     }
 
-    public Optional<Exit> getExit(Dir dir){
-       return exits.stream().filter(e -> e.getDir() == dir).findFirst();
+    public Optional<Exit> getExit(Dir dir) {
+        return exits.stream().filter(e -> e.getDir() == dir).findFirst();
     }
 
     public Optional<Scene> getExitTo(Dir dir) {

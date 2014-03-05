@@ -1,6 +1,7 @@
 package com.github.txtrpg.json;
 
 import com.github.txtrpg.core.Dir;
+import com.github.txtrpg.core.Item;
 import com.github.txtrpg.core.Scene;
 import com.github.txtrpg.core.World;
 import org.junit.Test;
@@ -13,7 +14,10 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import java.util.Optional;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.collection.IsIterableWithSize.iterableWithSize;
 import static org.junit.Assert.assertThat;
 
@@ -49,9 +53,15 @@ public class WorldUnmarshallerTest {
         Scene s1 = world.getScenes().get("s1");
         Scene s2 = world.getScenes().get("s2");
         Scene s3 = world.getScenes().get("s3");
-        assertThat(s1.getExit(Dir.n).get().getTo(), equalTo(s2));
-        assertThat(s2.getExit(Dir.s).get().getTo(), equalTo(s1));
-        assertThat(s2.getExit(Dir.n).get().getTo(), equalTo(s3));
-        assertThat(s3.getExit(Dir.s).get().getTo(), equalTo(s2));
+        assertThat(s1.getExit(Dir.n).get().getTo(), is(s2));
+        assertThat(s2.getExit(Dir.s).get().getTo(), is(s1));
+        assertThat(s2.getExit(Dir.n).get().getTo(), is(s3));
+        assertThat(s3.getExit(Dir.s).get().getTo(), is(s2));
+        assertThat(s1.getGround().isFull(), is(false));
+        assertThat(s1.getGround().getWeight(), is(0));
+        Optional<Item> c1 = s1.getGround().take("c1");
+        assertThat(c1.isPresent(), is(true));
+        assertThat(c1.get(), hasProperty("description", is("silver coin")));
+        assertThat(s1.getGround().isEmpty(), is(true));
     }
 }

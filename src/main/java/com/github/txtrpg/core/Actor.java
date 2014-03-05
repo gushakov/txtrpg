@@ -13,15 +13,7 @@ public class Actor extends Entity {
 
     private ActionProcessor actionProcessor;
 
-    public Actor(Scene location, ActionProcessor actionProcessor) {
-        this.location = location;
-        this.actionProcessor = actionProcessor;
-    }
-
-    public Actor(String name, Scene location, ActionProcessor actionProcessor) {
-        super(name);
-        this.location = location;
-        this.actionProcessor = actionProcessor;
+    public Actor() {
     }
 
     public Actor(String name, String description, Scene location, ActionProcessor actionProcessor) {

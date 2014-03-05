@@ -14,8 +14,8 @@ public class Player extends Actor {
 
     private PrintWriter socketWriter;
 
-    public Player(Scene location, ActionProcessor actionProcessor, PrintWriter socketWriter) {
-        super(location, actionProcessor);
+    public Player(String name, String description, Scene location, ActionProcessor actionProcessor, PrintWriter socketWriter) {
+        super(name, description, location, actionProcessor);
         this.socketWriter = socketWriter;
     }
 
