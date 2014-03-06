@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CommandInterpreter extends CommandBaseListener {
 
-    private static final Logger logger  = LoggerFactory.getLogger(CommandInterpreter.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommandInterpreter.class);
 
     private Player player;
 

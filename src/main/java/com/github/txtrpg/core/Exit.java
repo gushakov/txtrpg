@@ -22,7 +22,7 @@ public class Exit {
     @EndNode
     private Scene to;
 
-    public Exit(){
+    public Exit() {
     }
 
     public Exit(Dir dir, Scene from, Scene to) {

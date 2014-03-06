@@ -1,7 +1,6 @@
 package com.github.txtrpg.repository;
 
 import com.github.txtrpg.core.Dir;
-import com.github.txtrpg.core.Exit;
 import com.github.txtrpg.core.Scene;
 import org.springframework.data.neo4j.annotation.Query;
 import org.springframework.data.neo4j.repository.GraphRepository;

@@ -24,7 +24,7 @@ public class Player extends Actor {
         updateStatus();
     }
 
-    public void updateStatus(){
+    public void updateStatus() {
         socketWriter.write(">");
         socketWriter.flush();
     }

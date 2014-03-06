@@ -31,7 +31,7 @@ public class PlayerInputTask implements Runnable {
     @Override
     public void run() {
         try {
-            if (rawInput.codePointAt(0) != 255){
+            if (rawInput.codePointAt(0) != 255) {
                 // convert input to UTF-8
                 String line = new String(rawInput.getBytes("ISO-8859-1"), "UTF-8");
                 // get rid of all control characters

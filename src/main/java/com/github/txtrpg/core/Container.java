@@ -2,23 +2,80 @@ package com.github.txtrpg.core;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * @author gushakov
  */
-public interface Container<T extends Movable> {
+public class Container<T extends Item> extends Item {
 
-    public int getCapacity();
+    private CollectionOfEntities<T> items;
 
-    public Optional<T> take(String name);
+    private boolean fixed;
 
-    public boolean put(T item);
+    private int emptyWeight;
 
-    public boolean canFit(T item);
+    private int capacity;
 
-    public boolean isFull();
+    public Container() {
+        this.items = new CollectionOfEntities<>();
+    }
 
-    public boolean isEmpty();
+    public Container(String name, String description) {
+        super(name, description);
+        this.fixed = true;
+        this.emptyWeight = Integer.MAX_VALUE;
+        this.capacity = Integer.MAX_VALUE;
+        this.items = new CollectionOfEntities<>();
+    }
 
-    public List<T> suggest(String prefix);
+    public Container(String name, String description, int emptyWeight) {
+        super(name, description, emptyWeight);
+        this.fixed = false;
+        this.emptyWeight = emptyWeight;
+        this.capacity = Integer.MAX_VALUE;
+        this.items = new CollectionOfEntities<>();
+    }
+
+    public ConcurrentSkipListSet<T> getItems() {
+        return items.getEntities();
+    }
+
+    public void setItems(ConcurrentSkipListSet<T> entities) {
+        items.setEntities(entities);
+    }
+
+    public synchronized Optional<T> take(String name) {
+        return items.remove(name);
+    }
+
+    public synchronized boolean put(T item) {
+        return canFit(item) && items.add(item);
+    }
+
+    public synchronized boolean canFit(Item item) {
+        return capacity >= getWeight() + item.getWeight();
+    }
+
+    public synchronized boolean isEmpty() {
+        return items.isEmpty();
+    }
+
+    public synchronized boolean isFull() {
+        return capacity > getWeight();
+    }
+
+    public synchronized List<T> find(String prefix) {
+        return items.find(prefix);
+    }
+
+    public int getCapacity() {
+        return capacity;
+    }
+
+    @Override
+    public synchronized int getWeight() {
+        return fixed ? emptyWeight : emptyWeight + items.stream().mapToInt(Item::getWeight).sum();
+    }
+
 }

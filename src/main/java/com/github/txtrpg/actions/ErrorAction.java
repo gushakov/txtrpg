@@ -1,7 +1,6 @@
 package com.github.txtrpg.actions;
 
 import com.github.txtrpg.core.Actor;
-import com.github.txtrpg.core.Player;
 
 /**
  * @author gushakov

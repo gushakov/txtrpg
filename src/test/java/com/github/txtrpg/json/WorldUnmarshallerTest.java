@@ -1,9 +1,6 @@
 package com.github.txtrpg.json;
 
-import com.github.txtrpg.core.Dir;
-import com.github.txtrpg.core.Item;
-import com.github.txtrpg.core.Scene;
-import com.github.txtrpg.core.World;
+import com.github.txtrpg.core.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +44,22 @@ public class WorldUnmarshallerTest {
     private WorldUnmarshaller worldUnmarshaller;
 
     @Test
+    public void testContainer() throws Exception {
+        Container<Item> chest = new Container<>("chest1", "big wooden chest");
+        assertThat(chest.isEmpty(), is(true));
+        chest.put(new Item("potion1", "a little bottle", 1));
+        chest.put(new Item("coin1", "old copper coin"));
+        chest.put(new Item("coin2", "silver coin"));
+        chest.put(new Item("coin3", "small gold coin"));
+        assertThat(chest.getWeight(), is(Integer.MAX_VALUE));
+        Container<Item> bag = new Container<>("bag1", "leather bag", 1);
+        assertThat(bag.getWeight(), is(1));
+        chest.put(bag);
+        assertThat(chest.find("bottle"), iterableWithSize(1));
+        assertThat(chest.find("coin"), iterableWithSize(3));
+    }
+
+    @Test
     public void testUnmarshal() throws Exception {
         World world = worldUnmarshaller.unmarshal();
         assertThat(world.getScenes().values(), iterableWithSize(3));
@@ -57,13 +70,11 @@ public class WorldUnmarshallerTest {
         assertThat(s2.getExit(Dir.s).get().getTo(), is(s1));
         assertThat(s2.getExit(Dir.n).get().getTo(), is(s3));
         assertThat(s3.getExit(Dir.s).get().getTo(), is(s2));
-        assertThat(s1.getGround().isFull(), is(false));
-        assertThat(s1.getGround().getWeight(), is(0));
 
-        assertThat(s1.getGround().suggest("co"), iterableWithSize(3));
-        assertThat(s1.getGround().suggest("silver"), iterableWithSize(1));
-        assertThat(s1.getGround().suggest("copper"), iterableWithSize(1));
-        assertThat(s1.getGround().suggest("gold"), iterableWithSize(1));
+        assertThat(s1.getGround().find("co"), iterableWithSize(3));
+        assertThat(s1.getGround().find("silver"), iterableWithSize(1));
+        assertThat(s1.getGround().find("copper"), iterableWithSize(1));
+        assertThat(s1.getGround().find("gold"), iterableWithSize(1));
 
         Optional<Item> c1 = s1.getGround().take("c1");
         assertThat(c1.isPresent(), is(true));

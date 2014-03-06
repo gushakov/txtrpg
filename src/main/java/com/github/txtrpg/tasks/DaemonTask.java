@@ -1,7 +1,6 @@
 package com.github.txtrpg.tasks;
 
 import com.github.txtrpg.actions.ActionProcessor;
-import com.github.txtrpg.core.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +22,6 @@ public class DaemonTask implements Runnable {
 
     @Override
     public void run() {
-           actionProcessor.processActions(LocalDateTime.now());
+        actionProcessor.processActions(LocalDateTime.now());
     }
 }

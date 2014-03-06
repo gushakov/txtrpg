@@ -21,22 +21,21 @@ public class ActionProcessor {
     }
 
     @PostConstruct
-    public void init(){
+    public void init() {
         actionsQueue = new ConcurrentLinkedQueue<>();
     }
 
-    public synchronized void addAction(Action action){
+    public synchronized void addAction(Action action) {
         actionsQueue.add(action);
     }
 
     public synchronized void processActions(LocalDateTime clock) {
         boolean done = false;
-        while (!done && !actionsQueue.isEmpty()){
+        while (!done && !actionsQueue.isEmpty()) {
             Action action = actionsQueue.poll();
-            if (action.getTime().compareTo(clock) < 0){
+            if (action.getTime().compareTo(clock) < 0) {
                 actionsTaskExecutor.submit(new ProcessActionTask(action));
-            }
-            else {
+            } else {
                 done = true;
             }
         }

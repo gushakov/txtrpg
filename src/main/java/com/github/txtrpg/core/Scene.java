@@ -19,15 +19,15 @@ public class Scene extends Entity {
     @Fetch
     private Set<Exit> exits;
 
-    private ItemsContainer ground;
+    private Container<Item> ground;
 
-    public Scene(){
+    public Scene() {
     }
 
     public Scene(String name, String description) {
         super(name, description);
         this.exits = new HashSet<>();
-        this.ground = new ItemsContainer();
+        this.ground = new Container<>();
     }
 
     public Set<Exit> getExits() {
@@ -38,11 +38,11 @@ public class Scene extends Entity {
         this.exits = exits;
     }
 
-    public ItemsContainer getGround() {
+    public Container<Item> getGround() {
         return ground;
     }
 
-    public void setGround(ItemsContainer ground) {
+    public void setGround(Container<Item> ground) {
         this.ground = ground;
     }
 
@@ -56,7 +56,7 @@ public class Scene extends Entity {
 
     public Optional<Scene> getExitTo(Dir dir) {
         Optional<Exit> exit = exits.stream().filter(e -> e.getDir() == dir).findFirst();
-        return exit.isPresent() ? Optional.<Scene>of(exit.get().getTo()) : Optional.<Scene>empty();
+        return exit.isPresent() ? Optional.of(exit.get().getTo()) : Optional.empty();
     }
 
 }

@@ -34,26 +34,26 @@ public class Actor extends Entity {
         return actionProcessor;
     }
 
-    public synchronized boolean doWelcome(){
+    public synchronized boolean doWelcome() {
         return true;
     }
 
-    public synchronized boolean doMove(Dir dir){
+    public synchronized boolean doMove(Dir dir) {
         boolean success = false;
         Optional<Scene> to = location.getExitTo(dir);
-        if (to.isPresent()){
+        if (to.isPresent()) {
             location = to.get();
             success = true;
         }
-        return  success;
+        return success;
     }
 
-    public synchronized boolean doLook(Visible target){
+    public synchronized boolean doLook(Visible target) {
         return true;
     }
 
-    public synchronized boolean doError(String input){
-       return true;
+    public synchronized boolean doError(String input) {
+        return true;
     }
 
 }
