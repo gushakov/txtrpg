@@ -4,8 +4,10 @@ import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.actions.ErrorAction;
 import com.github.txtrpg.actions.LookAction;
 import com.github.txtrpg.utils.ConsoleUtils;
+import com.sun.javafx.binding.StringFormatter;
 
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * @author gushakov
@@ -20,13 +22,23 @@ public class Player extends Actor {
     }
 
     public void sendMessage(String message) {
-        socketWriter.println(ConsoleUtils.color(message));
+        socketWriter.println("\n\r"+ConsoleUtils.color(message));
         updateStatus();
     }
 
     public void updateStatus() {
         socketWriter.write(">");
         socketWriter.flush();
+    }
+
+    @Override
+    public synchronized boolean doDisambiguate(List<Entity> candidates) {
+        socketWriter.println("\n\rThere are several of those here:");
+        for (int i = 0; i < candidates.size(); i++) {
+            socketWriter.println(ConsoleUtils.color("#" + (i + 1) + "#: " + candidates.get(i).getDescription()));
+        }
+        updateStatus();
+        return true;
     }
 
     @Override

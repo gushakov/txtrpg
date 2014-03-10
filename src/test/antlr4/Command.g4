@@ -55,9 +55,14 @@ move : NORTH
  | DOWN
  ;
 
-look : 'look' WORD? { param1 = $WORD.text; };
+look : 'look'
+    | 'look' WORD { param1 = $WORD.text; }
+    | 'look' WORD { param1 = $WORD.text; } NUMBER { param2 = $NUMBER.text; }
+    ;
 
-quit : 'quit' | 'exit';
+quit : 'quit'
+    | 'exit'
+    ;
 
 // tokens
 
@@ -67,8 +72,8 @@ SOUTH: 's';
 WEST : 'w';
 UP : 'u';
 DOWN : 'd';
-
 WORD : ('a'..'z')+;
+NUMBER : ('0'..'9')+;
 
 // ignore white space
 

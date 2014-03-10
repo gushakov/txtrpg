@@ -1,9 +1,6 @@
 package com.github.txtrpg.tasks;
 
-import com.github.txtrpg.actions.Action;
-import com.github.txtrpg.actions.ErrorAction;
-import com.github.txtrpg.actions.LookAction;
-import com.github.txtrpg.actions.MoveAction;
+import com.github.txtrpg.actions.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +22,9 @@ public class ProcessActionTask implements Runnable {
     public void run() {
         logger.debug("Processing action {}", action);
         switch (action.getName()) {
+            case disambiguate:
+                disambiguate();
+                break;
             case welcome:
                 welcome();
                 break;
@@ -43,6 +43,12 @@ public class ProcessActionTask implements Runnable {
             default:
                 logger.error("Unknown action {}", action);
         }
+    }
+
+    //  disambiguate
+    private void disambiguate() {
+        logger.debug("Disambiguating...");
+        action.getInitiator().doDisambiguate(((DisambiguateAction) action).getCandidates());
     }
 
     // welcome

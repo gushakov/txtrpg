@@ -6,5 +6,20 @@ package com.github.txtrpg.core;
  * @author gushakov
  */
 public enum Dir {
-    n, e, s, w, u, d
+    n("north"),
+    e("east"),
+    s("south"),
+    w("west"),
+    u("up"),
+    d("down");
+
+    private String direction;
+
+    private Dir(String direction) {
+        this.direction = direction;
+    }
+
+    public String getDirection() {
+        return direction;
+    }
 }

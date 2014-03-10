@@ -1,8 +1,6 @@
 package com.github.txtrpg.json;
 
-import com.github.txtrpg.core.Exit;
-import com.github.txtrpg.core.Scene;
-import com.github.txtrpg.core.World;
+import com.github.txtrpg.core.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -41,9 +39,14 @@ public class WorldUnmarshaller {
             Map<String, Scene> scenesMap = jsonScenes.stream()
                     .collect(Collectors.<Scene, String, Scene>toMap(Scene::getName, Function.identity()));
 
-            // for each exit in every scene update a "from" scene and the "to" to point to the
-            // actual scenes from the map
             for (Scene scene : scenesMap.values()) {
+                // create a ground container, if needed
+                if (scene.getGround() == null){
+                    scene.setGround(new Container<Item>("ground", "ground"));
+                }
+
+                // for each exit in every scene update a "from" scene and the "to" to point to the
+                // actual scenes from the map
                 for (Exit exit : scene.getExits()) {
                     exit.setFrom(scene);
                     exit.setTo(scenesMap.get(exit.getTo().getName()));

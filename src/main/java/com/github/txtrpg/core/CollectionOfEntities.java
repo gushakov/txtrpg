@@ -48,6 +48,6 @@ public class CollectionOfEntities<T extends Entity> {
 
     public synchronized List<T> find(String prefix) {
         Pattern pattern = Pattern.compile("^" + prefix + "|\\s+" + prefix, Pattern.CASE_INSENSITIVE);
-        return entities.stream().filter(it -> pattern.matcher(it.getDescription()).find()).collect(Collectors.toList());
+        return entities.stream().filter(it -> pattern.matcher(it.getName()).find()).collect(Collectors.toList());
     }
 }

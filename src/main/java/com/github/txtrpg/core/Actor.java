@@ -2,6 +2,7 @@ package com.github.txtrpg.core;
 
 import com.github.txtrpg.actions.ActionProcessor;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,6 +33,10 @@ public class Actor extends Entity {
 
     public ActionProcessor getActionProcessor() {
         return actionProcessor;
+    }
+
+    public synchronized boolean doDisambiguate(List<Entity> candidates){
+        return true;
     }
 
     public synchronized boolean doWelcome() {

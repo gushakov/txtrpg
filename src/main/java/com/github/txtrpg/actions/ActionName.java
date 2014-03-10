@@ -5,6 +5,6 @@ package com.github.txtrpg.actions;
  */
 public enum ActionName {
 
-    welcome, move, look, quit, error
+    disambiguate, welcome, move, look, quit, error
 
 }

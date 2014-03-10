@@ -59,4 +59,20 @@ public class Scene extends Entity {
         return exit.isPresent() ? Optional.of(exit.get().getTo()) : Optional.empty();
     }
 
+    @Override
+    public String getDescription() {
+        final StringBuilder buffer = new StringBuilder(super.getDescription());
+        ground.getItems().stream().forEach(it -> {
+            buffer.append("\n\r")
+                    .append(it.getDescription());
+        });
+        exits.stream().forEach(e -> {
+            buffer.append("\n\r")
+                    .append("*")
+                    .append(e.getDir().getDirection())
+                    .append("*: to ")
+                    .append(e.getTo().getName());
+        });
+        return buffer.toString();
+    }
 }

@@ -1,7 +1,7 @@
 [
     {
         "name": "s1",
-        "description": "A footpath in dark forest. A small _coin_ is laying on the ground.",
+        "description": "You find yourself in a midst of a dark and dense forest. Branches form a thick canopy overhead.\n\rA a narrow footpath winds itself through the trees to the north.",
         "exits": [
             {
                 "dir": "n",
@@ -13,18 +13,18 @@
         "ground": {
             "items": [
                 {
-                    "name": "c1",
-                    "description": "silver coin",
+                    "name": "silver coin",
+                    "description": "You notice a small _silver coin_ is glistening on the side of the road.",
                     "weight": 0
                 },
                 {
-                    "name": "c2",
-                    "description": "old copper coin",
+                    "name": "old copper coin",
+                    "description": "Somebody lost an old _copper coin_ here.",
                     "weight": 0
                 },
                 {
-                    "name": "c3",
-                    "description": "shiny gold coin",
+                    "name": "gold coin",
+                    "description": "You catch a sight of a shiny _gold coin_ laying on the ground.",
                     "weight": 0
                 }
             ]
