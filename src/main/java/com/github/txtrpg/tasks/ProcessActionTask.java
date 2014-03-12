@@ -72,12 +72,12 @@ public class ProcessActionTask implements Runnable {
     // error
     private void error() {
         logger.debug("Error...");
-        action.getInitiator().doError(((ErrorAction) action).getInput());
+        action.getInitiator().doError(((ErrorAction) action).getError());
     }
 
     // quit
     private void quit() {
         logger.debug("Quitting...");
-        System.exit(0);
+        action.getInitiator().doQuit();
     }
 }

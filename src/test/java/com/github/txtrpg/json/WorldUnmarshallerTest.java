@@ -47,10 +47,10 @@ public class WorldUnmarshallerTest {
     public void testContainer() throws Exception {
         Container<Item> chest = new Container<>("chest1", "big wooden chest");
         assertThat(chest.isEmpty(), is(true));
-        chest.put(new Item("potion1", "a little bottle", 1));
-        chest.put(new Item("coin1", "old copper coin"));
-        chest.put(new Item("coin2", "silver coin"));
-        chest.put(new Item("coin3", "small gold coin"));
+        chest.put(new Item("a little bottle", "a little bottle", 1));
+        chest.put(new Item("copper coin", "copper coin"));
+        chest.put(new Item("silver coin", "silver coin"));
+        chest.put(new Item("small gold coin", "small gold coin"));
         assertThat(chest.getWeight(), is(Integer.MAX_VALUE));
         Container<Item> bag = new Container<>("bag1", "leather bag", 1);
         assertThat(bag.getWeight(), is(1));
@@ -76,8 +76,8 @@ public class WorldUnmarshallerTest {
         assertThat(s1.getGround().find("copper"), iterableWithSize(1));
         assertThat(s1.getGround().find("gold"), iterableWithSize(1));
 
-        Optional<Item> c1 = s1.getGround().take("c1");
-        assertThat(c1.isPresent(), is(true));
-        assertThat(c1.get(), hasProperty("description", is("silver coin")));
+        Optional<Item> coin1 = s1.getGround().take("silver coin");
+        assertThat(coin1.isPresent(), is(true));
+        assertThat(coin1.get(), hasProperty("name", is("silver coin")));
     }
 }

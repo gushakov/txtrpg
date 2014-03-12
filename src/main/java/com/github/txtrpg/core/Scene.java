@@ -21,13 +21,18 @@ public class Scene extends Entity {
 
     private Container<Item> ground;
 
+    private Room<Actor> room;
+
     public Scene() {
+        this.ground = new Container<>();
+        this.room = new Room<>();
     }
 
     public Scene(String name, String description) {
         super(name, description);
         this.exits = new HashSet<>();
         this.ground = new Container<>();
+        this.room = new Room<>();
     }
 
     public Set<Exit> getExits() {
@@ -46,6 +51,14 @@ public class Scene extends Entity {
         this.ground = ground;
     }
 
+    public Room<Actor> getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room<Actor> room) {
+        this.room = room;
+    }
+
     public void addExit(Dir dir, Scene to) {
         exits.add(new Exit(dir, this, to));
     }
@@ -62,7 +75,7 @@ public class Scene extends Entity {
     @Override
     public String getDescription() {
         final StringBuilder buffer = new StringBuilder(super.getDescription());
-        ground.getItems().stream().forEach(it -> {
+        ground.stream().forEach(it -> {
             buffer.append("\n\r")
                     .append(it.getDescription());
         });
@@ -72,6 +85,9 @@ public class Scene extends Entity {
                     .append(e.getDir().getDirection())
                     .append("*: to ")
                     .append(e.getTo().getName());
+        });
+        room.stream().forEach(a -> {
+            buffer.append("\n\r").append(a.getDescription());
         });
         return buffer.toString();
     }

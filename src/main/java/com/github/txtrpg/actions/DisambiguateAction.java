@@ -2,7 +2,6 @@ package com.github.txtrpg.actions;
 
 import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Entity;
-import com.github.txtrpg.core.Visible;
 
 import java.util.List;
 

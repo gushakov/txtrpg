@@ -3,12 +3,16 @@ package com.github.txtrpg.client;
 import com.github.txtrpg.actions.Action;
 import com.github.txtrpg.actions.ActionName;
 import com.github.txtrpg.actions.ActionProcessor;
+import com.github.txtrpg.actions.ErrorAction;
 import com.github.txtrpg.antlr4.CommandLexer;
 import com.github.txtrpg.antlr4.CommandParser;
 import com.github.txtrpg.core.*;
 import com.github.txtrpg.tasks.ProcessActionTask;
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.RecognitionException;
+import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import org.hamcrest.collection.IsIterableWithSize;
 import org.junit.Before;
@@ -19,7 +23,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.Socket;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
@@ -54,7 +60,9 @@ public class CommandInterpreterTest {
         ground.put(new Item("small gold coin", "small gold _coin_"));
         s1.setGround(ground);
         mockActionProcessor = mock(ActionProcessor.class);
-        player = new Player("p1", "player", s1, mockActionProcessor, mock(PrintWriter.class));
+        Socket mockSocket = mock(Socket.class);
+        when(mockSocket.getOutputStream()).thenReturn(mock(OutputStream.class));
+        player = new Player("p1", "player", s1, mockActionProcessor, mockSocket);
     }
 
     @Test
@@ -90,7 +98,7 @@ public class CommandInterpreterTest {
     }
 
     @Test
-    public void testDisambiguate() throws Exception {
+    public void testLookDisambiguate() throws Exception {
         parseCommand(player, mockActionProcessor, "look co");
         ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
@@ -100,12 +108,33 @@ public class CommandInterpreterTest {
 
     }
 
+@Test
+    public void testLookDisambiguateIndexOutOfBounds() throws Exception {
+        parseCommand(player, mockActionProcessor, "look co 4");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.error)));
+    }
+
+    @Test
+    public void testLookError() throws Exception {
+        parseCommand(player, mockActionProcessor, "look 1");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.error)));
+    }
+
     private void parseCommand(Player player, ActionProcessor mockActionProcessor, String input) {
         CommandLexer lexer = new CommandLexer(new ANTLRInputStream(input));
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         CommandParser parser = new CommandParser(tokens);
+        parser.setErrorHandler(new BailErrorStrategy());
         CommandInterpreter interpreter = new CommandInterpreter(player, parser, mockActionProcessor);
         ParseTreeWalker walker = new ParseTreeWalker();
-        walker.walk(interpreter, parser.command());
+        try {
+            walker.walk(interpreter, parser.command());
+        } catch (ParseCancellationException e) {
+            mockActionProcessor.addAction(new ErrorAction(player, "You cannot do -%s- here", input));
+        }
     }
 }

@@ -3,10 +3,12 @@ package com.github.txtrpg.client;
 import com.github.txtrpg.actions.*;
 import com.github.txtrpg.antlr4.CommandBaseListener;
 import com.github.txtrpg.antlr4.CommandParser;
-import com.github.txtrpg.core.*;
+import com.github.txtrpg.core.Dir;
+import com.github.txtrpg.core.Entity;
+import com.github.txtrpg.core.Item;
+import com.github.txtrpg.core.Player;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.antlr.v4.runtime.tree.ErrorNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,32 +43,35 @@ public class CommandInterpreter extends CommandBaseListener {
     @Override
     public void enterLook(@NotNull CommandParser.LookContext ctx) {
         Action action;
-        String param1 = parser.getParam1();
-        String param2 = parser.getParam2();
-        if (param1 != null) {
-            List<Item> candidates = player.getLocation().getGround().find(param1);
-            if (candidates.size() > 1){
-                if (param2!=null){
-                   Integer index = Integer.parseInt(param2) - 1;
-                    if (index >= 0 && index < candidates.size()){
-                        action = new LookAction(player, candidates.get(index));
+        switch (parser.getVariant()) {
+            case 1:
+                action = new LookAction(player);
+                break;
+            case 2:
+            case 3:
+                String param1 = parser.getParam1();
+                String param2 = parser.getParam2();
+                List<Item> candidates = player.getLocation().getGround().find(param1);
+                if (candidates.size() > 1) {
+                    if (param2 != null) {
+                        Integer index = Integer.parseInt(parser.getParam2()) - 1;
+                        if (index >= 0 && index < candidates.size()) {
+                            action = new LookAction(player, candidates.get(index));
+                        } else {
+                            action = new ErrorAction(player, "There is no -%d- of -%s- here", index, param1);
+                        }
+                    } else {
+                        action = new DisambiguateAction(player,
+                                candidates.stream().map(Entity.class::cast).collect(Collectors.toList()));
                     }
-                    else {
-                        action = new ErrorAction(player, param2);
-                    }
+                } else if (candidates.size() == 1) {
+                    action = new LookAction(player, candidates.get(0));
+                } else {
+                    action = new ErrorAction(player, "There are no -%s- here", param1);
                 }
-                else {
-                    action = new DisambiguateAction(player, candidates.stream().map(Entity.class::cast).collect(Collectors.toList()));
-                }
-            }
-            else if (candidates.size() == 1){
-                action = new LookAction(player, candidates.get(0));
-            }
-            else {
-                action = new ErrorAction(player, param1);
-            }
-        } else {
-            action = new LookAction(player);
+                break;
+            default:
+                throw new RuntimeException("Cannot interpret command structure.");
         }
         actionProcessor.addAction(action);
         super.enterLook(ctx);
@@ -77,12 +82,6 @@ public class CommandInterpreter extends CommandBaseListener {
         QuitAction action = new QuitAction(player);
         actionProcessor.addAction(action);
         super.enterQuit(ctx);
-    }
-
-    @Override
-    public void visitErrorNode(@NotNull ErrorNode node) {
-        actionProcessor.addAction(new ErrorAction(player, node.getText()));
-        super.visitErrorNode(node);
     }
 
     @Override

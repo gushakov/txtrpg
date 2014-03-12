@@ -3,6 +3,7 @@ package com.github.txtrpg.core;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Stream;
 
 /**
  * @author gushakov
@@ -37,8 +38,8 @@ public class Container<T extends Item> extends Item {
         this.items = new CollectionOfEntities<>();
     }
 
-    public ConcurrentSkipListSet<T> getItems() {
-        return items.getEntities();
+    public Stream<T> stream() {
+        return items.stream();
     }
 
     public void setItems(ConcurrentSkipListSet<T> entities) {

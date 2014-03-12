@@ -1,5 +1,6 @@
 package com.github.txtrpg.core;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -7,9 +8,13 @@ import java.util.Map;
  */
 public class World {
 
+    public World() {
+        players = new HashMap<>();
+    }
+
     private Map<String, Scene> scenes;
 
-    private Player player;
+    private Map<String, Player> players;
 
     public Map<String, Scene> getScenes() {
         return scenes;
@@ -19,12 +24,12 @@ public class World {
         this.scenes = scenes;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getPlayer(String name) {
+        return players.get(name);
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void addPlayer(Player player) {
+        players.put(player.getName(), player);
     }
 
 }

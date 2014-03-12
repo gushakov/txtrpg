@@ -1,24 +1,17 @@
 package com.github.txtrpg.server;
 
 import com.github.txtrpg.actions.ActionProcessor;
-import com.github.txtrpg.actions.WelcomeAction;
-import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.World;
 import com.github.txtrpg.json.WorldUnmarshaller;
 import com.github.txtrpg.tasks.DaemonTask;
-import com.github.txtrpg.tasks.PlayerInputTask;
+import com.github.txtrpg.tasks.ServerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.util.concurrent.ExecutorService;
 
 /**
  * @author gushakov
@@ -28,7 +21,7 @@ public class GameServer {
 
     private World world;
 
-    private ThreadPoolTaskExecutor commandsTaskExecutor;
+    private ExecutorService commandsTaskExecutor;
 
     private ActionProcessor actionProcessor;
 
@@ -36,7 +29,7 @@ public class GameServer {
 
     private WorldUnmarshaller worldUnmarshaller;
 
-    public void setCommandsTaskExecutor(ThreadPoolTaskExecutor commandsTaskExecutor) {
+    public void setCommandsTaskExecutor(ExecutorService commandsTaskExecutor) {
         this.commandsTaskExecutor = commandsTaskExecutor;
     }
 
@@ -58,32 +51,8 @@ public class GameServer {
         daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
     }
 
-    public void start() throws IOException {
-
-        while (true) {
-            try (ServerSocket server = new ServerSocket(3333)) {
-                try (
-                        Socket socket = server.accept();
-                        PrintWriter socketWriter = new PrintWriter(socket.getOutputStream(), true);
-                        // Putty telnet sends in in ISO-8859-1 bytes
-                        BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO-8859-1"))
-                ) {
-                    logger.debug("Accepted connection from {}", socket.getRemoteSocketAddress());
-                    Player player = new Player("p1", socket.getInetAddress().getHostName(),
-                            world.getScenes().get("s1"), actionProcessor, socketWriter);
-                    world.setPlayer(player);
-                    actionProcessor.addAction(new WelcomeAction(player));
-                    String rawInput;
-                    while ((rawInput = socketReader.readLine()) != null) {
-                        commandsTaskExecutor.submit(new PlayerInputTask(player, rawInput, actionProcessor));
-                        player.updateStatus();
-                    }
-
-                }
-            }
-        }
-
-
+    public void start() throws IOException, InterruptedException {
+        new ServerTask(world, actionProcessor, commandsTaskExecutor).run();
     }
 
 }

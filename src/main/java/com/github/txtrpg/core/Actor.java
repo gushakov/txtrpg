@@ -35,7 +35,7 @@ public class Actor extends Entity {
         return actionProcessor;
     }
 
-    public synchronized boolean doDisambiguate(List<Entity> candidates){
+    public synchronized boolean doDisambiguate(List<Entity> candidates) {
         return true;
     }
 
@@ -59,6 +59,9 @@ public class Actor extends Entity {
 
     public synchronized boolean doError(String input) {
         return true;
+    }
+
+    public synchronized void doQuit() {
     }
 
 }

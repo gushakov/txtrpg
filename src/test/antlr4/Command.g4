@@ -3,19 +3,21 @@ grammar Command;
 
 @header{
     package com.github.txtrpg.antlr4;
-    import com.github.txtrpg.actions.Action;
 }
 
 // grammar tree
 
 @parser::members {
 
+ private int variant = -1;
  private String param1;
  private String param2;
  private String param3;
  private String param4;
 
-private Action action;
+ public int getVariant(){
+    return variant;
+ }
 
  public String getParam1() {
     return param1;
@@ -34,6 +36,7 @@ private Action action;
  }
 
  public void resetParams() {
+    variant = -1;
     param1 = null;
     param2 = null;
     param3 = null;
@@ -42,40 +45,30 @@ private Action action;
 
 }
 
-command : move
-    | look
-    | quit
+command : move EOF
+    | look EOF
+    | quit EOF
     ;
 
-move : NORTH
- | EAST
- | SOUTH
- | WEST
- | UP
- | DOWN
+move : 'n'
+    | 'e'
+    | 's'
+    | 'w'
+    | 'u'
+    | 'd'
  ;
 
-look : 'look'
-    | 'look' WORD { param1 = $WORD.text; }
-    | 'look' WORD { param1 = $WORD.text; } NUMBER { param2 = $NUMBER.text; }
+look : 'look' { variant = 1; }
+    | 'look' WORD { param1 = $WORD.text; variant = 2; }
+    | 'look' WORD NUMBER { param1 = $WORD.text; param2 = $NUMBER.text; variant = 3; }
     ;
 
-quit : 'quit'
-    | 'exit'
-    ;
+quit : 'quit' | 'exit';
 
 // tokens
-
-NORTH : 'n';
-EAST : 'e';
-SOUTH: 's';
-WEST : 'w';
-UP : 'u';
-DOWN : 'd';
 WORD : ('a'..'z')+;
 NUMBER : ('0'..'9')+;
 
 // ignore white space
-
 WS : [ \t\r\n] -> skip;
 

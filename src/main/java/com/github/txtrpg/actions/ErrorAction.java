@@ -7,15 +7,14 @@ import com.github.txtrpg.core.Actor;
  */
 public class ErrorAction extends Action {
 
-    private String input;
+    private String error;
 
-    public ErrorAction(Actor initiator, String input) {
+    public ErrorAction(Actor initiator, String template, Object... args) {
         super(ActionName.error, initiator);
-        this.input = input;
+        this.error = String.format(template, args);
     }
 
-    public String getInput() {
-        return input;
+    public String getError() {
+        return error;
     }
-
 }

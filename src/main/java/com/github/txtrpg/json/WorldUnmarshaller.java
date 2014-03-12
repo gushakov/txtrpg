@@ -41,7 +41,7 @@ public class WorldUnmarshaller {
 
             for (Scene scene : scenesMap.values()) {
                 // create a ground container, if needed
-                if (scene.getGround() == null){
+                if (scene.getGround() == null) {
                     scene.setGround(new Container<Item>("ground", "ground"));
                 }
 

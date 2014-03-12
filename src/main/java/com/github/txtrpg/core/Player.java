@@ -4,9 +4,12 @@ import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.actions.ErrorAction;
 import com.github.txtrpg.actions.LookAction;
 import com.github.txtrpg.utils.ConsoleUtils;
-import com.sun.javafx.binding.StringFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.List;
 
 /**
@@ -14,28 +17,37 @@ import java.util.List;
  */
 public class Player extends Actor {
 
+    private static final Logger logger = LoggerFactory.getLogger(Player.class);
+
     private PrintWriter socketWriter;
 
-    public Player(String name, String description, Scene location, ActionProcessor actionProcessor, PrintWriter socketWriter) {
+    private boolean quit;
+
+    public Player(String name, String description, Scene location, ActionProcessor actionProcessor, Socket socket) {
         super(name, description, location, actionProcessor);
-        this.socketWriter = socketWriter;
+        this.quit = false;
+        this.getLocation().getRoom().enter(this);
+        try {
+            socketWriter = new PrintWriter(socket.getOutputStream(), true);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            try {
+                socket.close();
+            } catch (IOException ex) {
+                logger.error(ex.getMessage(), ex);
+            }
+        }
     }
 
-    public void sendMessage(String message) {
-        socketWriter.println("\n\r"+ConsoleUtils.color(message));
-        updateStatus();
-    }
-
-    public void updateStatus() {
-        socketWriter.write(">");
-        socketWriter.flush();
+    public synchronized boolean isQuit() {
+        return quit;
     }
 
     @Override
     public synchronized boolean doDisambiguate(List<Entity> candidates) {
-        socketWriter.println("\n\rThere are several of those here:");
+        sendMessage("There are several of those here:", false, false);
         for (int i = 0; i < candidates.size(); i++) {
-            socketWriter.println(ConsoleUtils.color("#" + (i + 1) + "#: " + candidates.get(i).getDescription()));
+            sendMessage("#" + (i + 1) + "#: " + candidates.get(i).getName(), true, false);
         }
         updateStatus();
         return true;
@@ -43,9 +55,9 @@ public class Player extends Actor {
 
     @Override
     public synchronized boolean doWelcome() {
-        socketWriter.println("+-------------------------------------------+");
-        socketWriter.println(ConsoleUtils.color("|             *WELCOME*                       |"));
-        socketWriter.println("+-------------------------------------------+");
+        sendMessage("+-------------------------------------------+", false, false);
+        sendMessage("|             *WELCOME*                       |", true, false);
+        sendMessage("+-------------------------------------------+", false, false);
         updateStatus();
         getActionProcessor().addAction(new LookAction(this, getLocation()));
         return true;
@@ -57,7 +69,7 @@ public class Player extends Actor {
         if (moved) {
             getActionProcessor().addAction(new LookAction(this, getLocation()));
         } else {
-            getActionProcessor().addAction(new ErrorAction(this, dir.toString()));
+            getActionProcessor().addAction(new ErrorAction(this, "You cannot go -%s- from here.", dir.getDirection()));
         }
         return moved;
     }
@@ -73,10 +85,43 @@ public class Player extends Actor {
     }
 
     @Override
-    public synchronized boolean doError(String input) {
-        if (input != null) {
-            sendMessage("You cannot do -" + input + "- here.");
+    public synchronized boolean doError(String error) {
+        if (error != null) {
+            sendMessage(error);
         }
         return true;
     }
+
+    @Override
+    public synchronized void doQuit() {
+        getLocation().getRoom().quit(this);
+        socketWriter.write("Bye.");
+        socketWriter.flush();
+        quit = true;
+    }
+
+    public void updateStatus() {
+        socketWriter.write(">");
+        socketWriter.flush();
+    }
+
+    private void sendMessage(String message) {
+        sendMessage(message, true, true);
+    }
+
+    private void sendMessage(String message, boolean withColor, boolean withStatus) {
+        String out;
+        if (withColor) {
+            out = ConsoleUtils.color(message);
+        } else {
+            out = message;
+        }
+        socketWriter.println(out);
+        if (withStatus) {
+            updateStatus();
+        } else {
+            socketWriter.flush();
+        }
+    }
+
 }
