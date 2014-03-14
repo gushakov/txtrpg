@@ -21,7 +21,12 @@ public class Room<T extends Actor> {
         actors.add(actor);
     }
 
-    public synchronized void quit(T actor) {
+    public synchronized void leave(T actor) {
         actors.remove(actor.getName());
+    }
+
+    public synchronized Stream<Player> getOtherPlayers(Player player) {
+        return actors.stream().filter(a -> a instanceof Player && !a.equals(player))
+                .map(Player.class::cast);
     }
 }

@@ -3,6 +3,7 @@ package com.github.txtrpg.core;
 import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.actions.ErrorAction;
 import com.github.txtrpg.actions.LookAction;
+import com.github.txtrpg.actions.NoticeAction;
 import com.github.txtrpg.utils.ConsoleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,8 +59,10 @@ public class Player extends Actor {
         sendMessage("+-------------------------------------------+", false, false);
         sendMessage("|             *WELCOME*                       |", true, false);
         sendMessage("+-------------------------------------------+", false, false);
-        updateStatus();
         getActionProcessor().addAction(new LookAction(this, getLocation()));
+        getLocation().getRoom().getOtherPlayers(this).forEach(p -> {
+            getActionProcessor().addAction(new NoticeAction(p, this));
+        });
         return true;
     }
 
@@ -80,7 +83,15 @@ public class Player extends Actor {
             sendMessage(target.getDescription());
         } else {
             sendMessage(getLocation().getDescription());
+            getLocation().showTo(this).stream()
+                    .forEach(v -> sendMessage(v.getDescription()));
         }
+        return true;
+    }
+
+    @Override
+    public synchronized boolean doNotice(Visible visible) {
+        sendMessage(visible.getDescription());
         return true;
     }
 
@@ -94,7 +105,7 @@ public class Player extends Actor {
 
     @Override
     public synchronized void doQuit() {
-        getLocation().getRoom().quit(this);
+        getLocation().getRoom().leave(this);
         socketWriter.write("Bye.");
         socketWriter.flush();
         quit = true;

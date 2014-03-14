@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.Random;
 
 /**
  * @author gushakov
@@ -31,7 +32,18 @@ public class PlayerInputTask implements Runnable {
     private World world;
 
     private static final String[] names = {
-            "Faervel", "Falasson", "Thavron", "Talathon", "Eglanor"
+            "Faervel",
+            "Falasson",
+            "Thavron",
+            "Talathon",
+            "Eglanor",
+            "Helegon",
+            "Esgalwathon",
+            "Limmon",
+            "Sarnor",
+            "Lhosson",
+            "Bornivon",
+            "Glosson"
     };
 
     public PlayerInputTask(World world, ActionProcessor actionProcessor, Socket socket) {
@@ -45,7 +57,7 @@ public class PlayerInputTask implements Runnable {
         try {
             // Putty telnet sends in in ISO-8859-1 bytes
             BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO-8859-1"));
-            String playerName = names[socket.getPort() % names.length];
+            String playerName = names[new Random(System.currentTimeMillis()).nextInt(names.length)] + socket.getPort();
             Player player = new Player(playerName, "@" + playerName + "@ is standing here.",
                     world.getScenes().get("s1"), actionProcessor, socket);
             world.addPlayer(player);

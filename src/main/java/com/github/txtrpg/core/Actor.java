@@ -40,6 +40,7 @@ public class Actor extends Entity {
     }
 
     public synchronized boolean doWelcome() {
+        location.getRoom().enter(this);
         return true;
     }
 
@@ -48,12 +49,17 @@ public class Actor extends Entity {
         Optional<Scene> to = location.getExitTo(dir);
         if (to.isPresent()) {
             location = to.get();
+            location.getRoom().leave(this);
             success = true;
         }
         return success;
     }
 
     public synchronized boolean doLook(Visible target) {
+        return true;
+    }
+
+    public synchronized boolean doNotice(Visible visible){
         return true;
     }
 

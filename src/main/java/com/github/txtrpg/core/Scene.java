@@ -4,16 +4,14 @@ import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A location in the world.
  *
  * @author gushakov
  */
-public class Scene extends Entity {
+public class Scene extends Entity implements Observable {
 
     @RelatedToVia(type = "EXIT_TO", direction = Direction.OUTGOING, elementClass = Exit.class)
     @Fetch
@@ -86,9 +84,13 @@ public class Scene extends Entity {
                     .append("*: to ")
                     .append(e.getTo().getName());
         });
-        room.stream().forEach(a -> {
-            buffer.append("\n\r").append(a.getDescription());
-        });
         return buffer.toString();
+    }
+
+    @Override
+    public Collection<Visible> showTo(Actor actor) {
+        List<Visible> visibles = new ArrayList<>();
+        room.stream().filter(a -> !a.getName().equals(actor.getName())).forEach(visibles::add);
+        return visibles;
     }
 }

@@ -34,6 +34,9 @@ public class ProcessActionTask implements Runnable {
             case look:
                 look();
                 break;
+            case notice:
+                notice();
+                break;
             case quit:
                 quit();
                 break;
@@ -67,6 +70,12 @@ public class ProcessActionTask implements Runnable {
     private void look() {
         logger.debug("Looking...");
         action.getInitiator().doLook(((LookAction) action).getTarget());
+    }
+
+    // notice
+    private void notice() {
+        logger.debug("Noticing...");
+        action.getInitiator().doNotice(((NoticeAction)action).getVisible());
     }
 
     // error
