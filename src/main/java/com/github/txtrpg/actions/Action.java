@@ -3,6 +3,7 @@ package com.github.txtrpg.actions;
 import com.github.txtrpg.core.Actor;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 
 /**
  * @author gushakov
@@ -33,4 +34,7 @@ public class Action {
         return time;
     }
 
+    public synchronized Collection<? extends Action> process(){
+         return null;
+    }
 }

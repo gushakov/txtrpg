@@ -11,10 +11,13 @@ public class ProcessActionTask implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessActionTask.class);
 
+    private ActionProcessor actionProcessor;
+
     private Action action;
 
-    public ProcessActionTask(Action action) {
+    public ProcessActionTask(ActionProcessor actionProcessor, Action action) {
         logger.debug("Created ProcessActionTask {}", this);
+        this.actionProcessor = actionProcessor;
         this.action = action;
     }
 
@@ -63,7 +66,9 @@ public class ProcessActionTask implements Runnable {
     // move
     private void move() {
         logger.debug("Moving...");
-        action.getInitiator().doMove(((MoveAction) action).getDir());
+       // action.getInitiator().doMove(((MoveAction) action).getDir());
+       actionProcessor.addActions(action.process());
+
     }
 
     // look

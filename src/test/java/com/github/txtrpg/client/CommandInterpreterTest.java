@@ -75,7 +75,7 @@ public class CommandInterpreterTest {
                 hasProperty("dir", equalTo(Dir.n))
         ));
 
-        ProcessActionTask task = new ProcessActionTask(actionArgument.getValue());
+        ProcessActionTask task = new ProcessActionTask(mockActionProcessor, actionArgument.getValue());
         task.run();
         actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(2)).addAction(actionArgument.capture());
