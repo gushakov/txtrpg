@@ -30,7 +30,7 @@ public class ActionProcessor {
         actionsQueue.add(action);
     }
 
-    public synchronized void addActions(Collection<? extends Action> actions){
+    public synchronized void addActions(Collection<? extends Action> actions) {
         actionsQueue.addAll(actions);
     }
 

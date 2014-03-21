@@ -1,20 +1,14 @@
 package com.github.txtrpg.client;
 
-import com.github.txtrpg.actions.Action;
-import com.github.txtrpg.actions.ActionName;
-import com.github.txtrpg.actions.ActionProcessor;
-import com.github.txtrpg.actions.ErrorAction;
+import com.github.txtrpg.actions.*;
 import com.github.txtrpg.antlr4.CommandLexer;
 import com.github.txtrpg.antlr4.CommandParser;
 import com.github.txtrpg.core.*;
-import com.github.txtrpg.tasks.ProcessActionTask;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.hamcrest.collection.IsIterableWithSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,14 +18,16 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
-import static org.hamcrest.collection.IsIterableWithSize.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+
+//import org.hamcrest.Matchers;
 
 /**
  * @author gushakov
@@ -47,6 +43,7 @@ public class CommandInterpreterTest {
 
     private Player player;
     private ActionProcessor mockActionProcessor;
+    private World world;
 
     @Before
     public void setUp() throws Exception {
@@ -59,10 +56,14 @@ public class CommandInterpreterTest {
         ground.put(new Item("silver coin", "silver _coin_"));
         ground.put(new Item("small gold coin", "small gold _coin_"));
         s1.setGround(ground);
+
+        world = new World();
+        world.setScenes(Arrays.asList(s1, s2).stream().collect(Collectors.toMap(Scene::getName, (s) -> s)));
+
         mockActionProcessor = mock(ActionProcessor.class);
         Socket mockSocket = mock(Socket.class);
         when(mockSocket.getOutputStream()).thenReturn(mock(OutputStream.class));
-        player = new Player("p1", "player", s1, mockActionProcessor, mockSocket);
+        player = new Player("p1", "player", s1, mockSocket);
     }
 
     @Test
@@ -70,16 +71,12 @@ public class CommandInterpreterTest {
         parseCommand(player, mockActionProcessor, "n");
         ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
-        assertThat(actionArgument.getValue(), allOf(
-                hasProperty("name", equalTo(ActionName.move)),
-                hasProperty("dir", equalTo(Dir.n))
-        ));
-
-        ProcessActionTask task = new ProcessActionTask(mockActionProcessor, actionArgument.getValue());
-        task.run();
-        actionArgument = ArgumentCaptor.forClass(Action.class);
-        verify(mockActionProcessor, times(2)).addAction(actionArgument.capture());
-        assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.look)));
+        assertThat(actionArgument.getValue(), instanceOf(MoveAction.class));
+        MoveAction moveAction = (MoveAction) actionArgument.getValue();
+        assertThat(moveAction.getDir(), equalTo(Dir.n));
+        moveAction.process();
+        Scene s2 = world.getScenes().get("s2");
+        assertThat(player.getLocation(), equalTo(s2));
     }
 
     @Test
@@ -90,14 +87,6 @@ public class CommandInterpreterTest {
     }
 
     @Test
-    public void testError() throws Exception {
-        parseCommand(player, mockActionProcessor, "err");
-        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
-        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
-        assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.error)));
-    }
-
-    @Test
     public void testLookDisambiguate() throws Exception {
         parseCommand(player, mockActionProcessor, "look co");
         ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
@@ -105,7 +94,6 @@ public class CommandInterpreterTest {
         assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.disambiguate)));
         assertThat(actionArgument.getValue(), hasProperty("candidates",
                 iterableWithSize(3)));
-
     }
 
 @Test
@@ -119,6 +107,14 @@ public class CommandInterpreterTest {
     @Test
     public void testLookError() throws Exception {
         parseCommand(player, mockActionProcessor, "look 1");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.error)));
+    }
+
+    @Test
+    public void testError() throws Exception {
+        parseCommand(player, mockActionProcessor, "err");
         ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
         assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.error)));

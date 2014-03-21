@@ -1,6 +1,7 @@
 package com.github.txtrpg.tasks;
 
-import com.github.txtrpg.actions.*;
+import com.github.txtrpg.actions.Action;
+import com.github.txtrpg.actions.ActionProcessor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,74 +25,7 @@ public class ProcessActionTask implements Runnable {
     @Override
     public void run() {
         logger.debug("Processing action {}", action);
-        switch (action.getName()) {
-            case disambiguate:
-                disambiguate();
-                break;
-            case welcome:
-                welcome();
-                break;
-            case move:
-                move();
-                break;
-            case look:
-                look();
-                break;
-            case notice:
-                notice();
-                break;
-            case quit:
-                quit();
-                break;
-            case error:
-                error();
-                break;
-            default:
-                logger.error("Unknown action {}", action);
-        }
+        actionProcessor.addActions(action.process());
     }
 
-    //  disambiguate
-    private void disambiguate() {
-        logger.debug("Disambiguating...");
-        action.getInitiator().doDisambiguate(((DisambiguateAction) action).getCandidates());
-    }
-
-    // welcome
-    private void welcome() {
-        logger.debug("Welcoming...");
-        action.getInitiator().doWelcome();
-    }
-
-    // move
-    private void move() {
-        logger.debug("Moving...");
-       // action.getInitiator().doMove(((MoveAction) action).getDir());
-       actionProcessor.addActions(action.process());
-
-    }
-
-    // look
-    private void look() {
-        logger.debug("Looking...");
-        action.getInitiator().doLook(((LookAction) action).getTarget());
-    }
-
-    // notice
-    private void notice() {
-        logger.debug("Noticing...");
-        action.getInitiator().doNotice(((NoticeAction)action).getVisible());
-    }
-
-    // error
-    private void error() {
-        logger.debug("Error...");
-        action.getInitiator().doError(((ErrorAction) action).getError());
-    }
-
-    // quit
-    private void quit() {
-        logger.debug("Quitting...");
-        action.getInitiator().doQuit();
-    }
 }

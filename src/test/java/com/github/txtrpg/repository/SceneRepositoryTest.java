@@ -1,7 +1,5 @@
 package com.github.txtrpg.repository;
 
-import com.github.txtrpg.core.Dir;
-import com.github.txtrpg.core.World;
 import com.github.txtrpg.json.WorldUnmarshaller;
 import org.junit.After;
 import org.junit.Test;
@@ -18,7 +16,7 @@ import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 /**

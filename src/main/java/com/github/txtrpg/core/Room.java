@@ -29,4 +29,8 @@ public class Room<T extends Actor> {
         return actors.stream().filter(a -> a instanceof Player && !a.equals(player))
                 .map(Player.class::cast);
     }
+
+    public synchronized Stream<T> getOtherActors(Actor actor) {
+        return actors.stream().filter(a -> !a.equals(actor));
+    }
 }

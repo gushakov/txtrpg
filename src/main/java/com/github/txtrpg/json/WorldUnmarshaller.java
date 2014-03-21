@@ -34,7 +34,8 @@ public class WorldUnmarshaller {
             // load scenes from json
             ArrayList<Scene> jsonScenes = mapper.readValue(scenesFileResource.getInputStream(),
                     new TypeReference<List<Scene>>() {
-                    });
+                    }
+            );
 
             Map<String, Scene> scenesMap = jsonScenes.stream()
                     .collect(Collectors.<Scene, String, Scene>toMap(Scene::getName, Function.identity()));

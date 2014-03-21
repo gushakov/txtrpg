@@ -59,7 +59,7 @@ public class PlayerInputTask implements Runnable {
             BufferedReader socketReader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "ISO-8859-1"));
             String playerName = names[new Random(System.currentTimeMillis()).nextInt(names.length)] + socket.getPort();
             Player player = new Player(playerName, "@" + playerName + "@ is standing here.",
-                    world.getScenes().get("s1"), actionProcessor, socket);
+                    world.getScenes().get("s1"), socket);
             world.addPlayer(player);
             actionProcessor.addAction(new WelcomeAction(player));
             String rawInput;

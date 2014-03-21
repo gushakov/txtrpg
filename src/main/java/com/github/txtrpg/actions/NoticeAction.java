@@ -1,9 +1,10 @@
 package com.github.txtrpg.actions;
 
-import com.github.txtrpg.actions.Action;
-import com.github.txtrpg.actions.ActionName;
 import com.github.txtrpg.core.Actor;
+import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.Visible;
+
+import java.util.Collection;
 
 /**
  * @author gushakov
@@ -17,7 +18,8 @@ public class NoticeAction extends Action {
         this.visible = visible;
     }
 
-    public Visible getVisible() {
-        return visible;
+    @Override
+    protected void processForPlayer(Collection<Action> actions, Player player) {
+        player.sendMessage(visible.getDescription());
     }
 }
