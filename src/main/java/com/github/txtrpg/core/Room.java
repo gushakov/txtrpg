@@ -1,5 +1,7 @@
 package com.github.txtrpg.core;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -28,6 +30,12 @@ public class Room<T extends Actor> {
     public synchronized Stream<Player> getOtherPlayers(Player player) {
         return actors.stream().filter(a -> a instanceof Player && !a.equals(player))
                 .map(Player.class::cast);
+    }
+
+    public synchronized List<Player> getMatchingPlayers(String prefix) {
+        return actors.stream()
+                .filter(a -> a instanceof Player && a.getName().toLowerCase().startsWith(prefix.toLowerCase()))
+                .map(Player.class::cast).collect(Collectors.toList());
     }
 
     public synchronized Stream<T> getOtherActors(Actor actor) {

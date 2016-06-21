@@ -21,7 +21,6 @@ public class GameServerTest {
     private GameServer server;
 
     @Test
-//    @Ignore
     public void testStartServer() throws Exception {
         assertThat(server, notNullValue());
         server.start();

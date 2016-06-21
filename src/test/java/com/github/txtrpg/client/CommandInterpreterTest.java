@@ -9,6 +9,7 @@ import org.antlr.v4.runtime.BailErrorStrategy;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.misc.ParseCancellationException;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +28,6 @@ import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
-//import org.hamcrest.Matchers;
 
 /**
  * @author gushakov
@@ -102,6 +102,23 @@ public class CommandInterpreterTest {
         ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
         assertThat(actionArgument.getValue(), hasProperty("name", equalTo(ActionName.error)));
+    }
+
+    @Test
+    public void testLookTargetCase() throws Exception {
+        parseCommand(player, mockActionProcessor, "look COIN 1");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue().getName(), equalTo(ActionName.look));
+    }
+
+    @Test
+    public void testLookAtPlayer() throws Exception {
+        parseCommand(player, mockActionProcessor, "look p1");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue().getName(), equalTo(ActionName.look));
+        assertThat(actionArgument.getValue(), hasProperty("target", Matchers.isA(Player.class)));
     }
 
     @Test

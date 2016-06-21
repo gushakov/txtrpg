@@ -19,6 +19,10 @@ public class DisambiguateAction extends Action {
         this.candidates = candidates;
     }
 
+    public List<Entity> getCandidates() {
+        return candidates;
+    }
+
     @Override
     protected void processForPlayer(Collection<Action> actions, Player player) {
         player.sendMessage("There are several of those here:", false, false);

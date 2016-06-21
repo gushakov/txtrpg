@@ -23,6 +23,10 @@ public class LookAction extends Action {
         this.target = target;
     }
 
+    public Visible getTarget() {
+        return target;
+    }
+
     @Override
     public synchronized Collection<Action> process() {
         Actor actor = getInitiator();
