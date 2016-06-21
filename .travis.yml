@@ -1,0 +1,10 @@
+language: java
+
+jdk:
+    - oraclejdk8
+
+before_install:
+    - "echo $JAVA_OPTS"
+
+script:
+    - mvn test
