@@ -114,11 +114,21 @@ public class CommandInterpreterTest {
 
     @Test
     public void testLookAtPlayer() throws Exception {
-        parseCommand(player, mockActionProcessor, "look p1");
+        parseCommand(player, mockActionProcessor, "look " + player.getName());
         ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
         verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
         assertThat(actionArgument.getValue().getName(), equalTo(ActionName.look));
         assertThat(actionArgument.getValue(), hasProperty("target", Matchers.isA(Player.class)));
+    }
+
+    @Test
+    public void testLookAtMe() throws Exception {
+        parseCommand(player, mockActionProcessor, "look me");
+        ArgumentCaptor<Action> actionArgument = ArgumentCaptor.forClass(Action.class);
+        verify(mockActionProcessor, times(1)).addAction(actionArgument.capture());
+        assertThat(actionArgument.getValue().getName(), equalTo(ActionName.look));
+        assertThat(actionArgument.getValue(), hasProperty("target", Matchers.isA(Player.class)));
+        assertThat(((Player)((LookAction)actionArgument.getValue()).getTarget()).getName(), equalTo(player.getName()));
     }
 
     @Test

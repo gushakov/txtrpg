@@ -52,8 +52,13 @@ public class CommandInterpreter extends CommandBaseListener {
                 String param1 = parser.getParam1();
                 String param2 = parser.getParam2();
                 List<Entity> candidates = new ArrayList<>();
-                candidates.addAll(player.getLocation().getGround().find(param1));
-                candidates.addAll(player.getLocation().getRoom().getMatchingPlayers(param1));
+                if (param1 != null && param1.equalsIgnoreCase("me")){
+                    candidates.add(player);
+                }
+                else {
+                    candidates.addAll(player.getLocation().getGround().find(param1));
+                    candidates.addAll(player.getLocation().getRoom().getMatchingPlayers(param1));
+                }
                 if (candidates.size() > 1) {
                     if (param2 != null) {
                         Integer index = Integer.parseInt(parser.getParam2()) - 1;
