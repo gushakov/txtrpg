@@ -61,6 +61,7 @@ public class AppConfig {
     public WorldUnmarshaller worldUnmarshaller() {
         WorldUnmarshaller unmarshaller = new WorldUnmarshaller();
         unmarshaller.setScenesFileResource(new ClassPathResource("scenes.json"));
+        unmarshaller.setNpcFileResource(new ClassPathResource("npcs.json"));
         return unmarshaller;
     }
 

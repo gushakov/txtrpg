@@ -45,6 +45,7 @@ public class SceneRepositoryTest {
         public WorldUnmarshaller worldLoader() {
             WorldUnmarshaller loader = new WorldUnmarshaller();
             loader.setScenesFileResource(new ClassPathResource("scenes.json"));
+            loader.setNpcFileResource(new ClassPathResource("npcs.json"));
             return loader;
         }
 

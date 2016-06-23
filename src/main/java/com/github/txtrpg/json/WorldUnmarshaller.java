@@ -6,6 +6,7 @@ import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,11 +24,21 @@ public class WorldUnmarshaller {
 
     private Resource scenesFileResource;
 
+    private Resource npcFileResource;
+
     public void setScenesFileResource(Resource scenesFileResource) {
         this.scenesFileResource = scenesFileResource;
     }
 
+    public void setNpcFileResource(Resource npcFileResource) {
+        this.npcFileResource = npcFileResource;
+    }
+
     public World unmarshal() {
+
+        Assert.notNull(scenesFileResource);
+        Assert.notNull(npcFileResource);
+
         World world = new World();
         ObjectMapper mapper = new ObjectMapper();
         try {
@@ -38,12 +49,12 @@ public class WorldUnmarshaller {
             );
 
             Map<String, Scene> scenesMap = jsonScenes.stream()
-                    .collect(Collectors.<Scene, String, Scene>toMap(Scene::getName, Function.identity()));
+                    .collect(Collectors.toMap(Scene::getName, Function.identity()));
 
             for (Scene scene : scenesMap.values()) {
                 // create a ground container, if needed
                 if (scene.getGround() == null) {
-                    scene.setGround(new Container<Item>("ground", "ground"));
+                    scene.setGround(new Container<>("ground", "ground"));
                 }
 
                 // for each exit in every scene update a "from" scene and the "to" to point to the
@@ -56,6 +67,17 @@ public class WorldUnmarshaller {
             }
 
             world.setScenes(scenesMap);
+
+            // load npcs types from josn
+
+            ArrayList<NpcType> jsonNpcs = mapper.readValue(npcFileResource.getInputStream(),
+                    new TypeReference<List<NpcType>>() {
+                    });
+
+            Map<String, NpcType> npcDictionary = jsonNpcs.stream()
+                    .collect(Collectors.toMap(NpcType::getName, Function.identity()));
+
+            world.setNpcDictionary(npcDictionary);
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

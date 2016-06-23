@@ -14,10 +14,20 @@ public class World {
 
     private Map<String, Scene> scenes;
 
+    private Map<String, NpcType> npcDictionary;
+
     private Map<String, Player> players;
 
     public Map<String, Scene> getScenes() {
         return scenes;
+    }
+
+    public Map<String, NpcType> getNpcDictionary() {
+        return npcDictionary;
+    }
+
+    public void setNpcDictionary(Map<String, NpcType> npcDictionary) {
+        this.npcDictionary = npcDictionary;
     }
 
     public void setScenes(Map<String, Scene> scenes) {

@@ -1,6 +1,8 @@
 package com.github.txtrpg.json;
 
 import com.github.txtrpg.core.*;
+import org.hamcrest.Matchers;
+import org.hamcrest.collection.IsArrayContainingInAnyOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +13,11 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.collection.IsIterableWithSize.iterableWithSize;
 import static org.junit.Assert.assertThat;
@@ -35,6 +39,7 @@ public class WorldUnmarshallerTest {
         public WorldUnmarshaller worldUnmarshaller() {
             WorldUnmarshaller loader = new WorldUnmarshaller();
             loader.setScenesFileResource(new ClassPathResource("scenes.json"));
+            loader.setNpcFileResource(new ClassPathResource("npcs.json"));
             return loader;
         }
 
@@ -79,5 +84,17 @@ public class WorldUnmarshallerTest {
         Optional<Item> coin1 = s1.getGround().take("silver coin");
         assertThat(coin1.isPresent(), is(true));
         assertThat(coin1.get(), hasProperty("name", is("silver coin")));
+    }
+
+    @Test
+    public void testUnmarshallNpcs() throws Exception {
+        World world = worldUnmarshaller.unmarshal();
+        Map<String, NpcType> npcDictionary = world.getNpcDictionary();
+        assertThat(npcDictionary, notNullValue());
+        NpcType butterfly = npcDictionary.get("butterfly");
+        assertThat(butterfly, notNullValue());
+        Spawn spawn = butterfly.getSpawn();
+        assertThat(spawn, notNullValue());
+        assertThat(spawn.getLocations(), Matchers.contains("s3"));
     }
 }
