@@ -1,6 +1,8 @@
 package com.github.txtrpg.json;
 
 import com.github.txtrpg.core.*;
+import com.github.txtrpg.npc.NpcController;
+import com.github.txtrpg.npc.NpcType;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -18,13 +20,15 @@ import java.util.stream.Collectors;
 /**
  * @author gushakov
  */
-public class WorldUnmarshaller {
+public class GameUnmarshaller {
 
-    private static final Logger logger = LoggerFactory.getLogger(WorldUnmarshaller.class);
+    private static final Logger logger = LoggerFactory.getLogger(GameUnmarshaller.class);
 
     private Resource scenesFileResource;
 
     private Resource npcFileResource;
+
+    private NpcController npcController;
 
     public void setScenesFileResource(Resource scenesFileResource) {
         this.scenesFileResource = scenesFileResource;
@@ -34,10 +38,15 @@ public class WorldUnmarshaller {
         this.npcFileResource = npcFileResource;
     }
 
+    public void setNpcController(NpcController npcController) {
+        this.npcController = npcController;
+    }
+
     public World unmarshal() {
 
         Assert.notNull(scenesFileResource);
         Assert.notNull(npcFileResource);
+        Assert.notNull(npcController);
 
         World world = new World();
         ObjectMapper mapper = new ObjectMapper();
@@ -68,7 +77,7 @@ public class WorldUnmarshaller {
 
             world.setScenes(scenesMap);
 
-            // load npcs types from josn
+            // load NPC types from json
 
             ArrayList<NpcType> jsonNpcs = mapper.readValue(npcFileResource.getInputStream(),
                     new TypeReference<List<NpcType>>() {
@@ -77,7 +86,7 @@ public class WorldUnmarshaller {
             Map<String, NpcType> npcDictionary = jsonNpcs.stream()
                     .collect(Collectors.toMap(NpcType::getName, Function.identity()));
 
-            world.setNpcDictionary(npcDictionary);
+            npcController.setNpcDictionary(npcDictionary);
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);

@@ -10,6 +10,7 @@ public enum ActionName {
     move,
     look,
     notice,
+    spawn,
     quit,
     error
 

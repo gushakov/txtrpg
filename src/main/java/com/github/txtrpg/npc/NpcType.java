@@ -1,4 +1,6 @@
-package com.github.txtrpg.core;
+package com.github.txtrpg.npc;
+
+import com.github.txtrpg.core.Spawn;
 
 /**
  * @author gushakov

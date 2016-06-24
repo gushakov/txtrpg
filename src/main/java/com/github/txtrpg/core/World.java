@@ -1,5 +1,7 @@
 package com.github.txtrpg.core;
 
+import com.github.txtrpg.npc.NpcType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,20 +16,10 @@ public class World {
 
     private Map<String, Scene> scenes;
 
-    private Map<String, NpcType> npcDictionary;
-
     private Map<String, Player> players;
 
     public Map<String, Scene> getScenes() {
         return scenes;
-    }
-
-    public Map<String, NpcType> getNpcDictionary() {
-        return npcDictionary;
-    }
-
-    public void setNpcDictionary(Map<String, NpcType> npcDictionary) {
-        this.npcDictionary = npcDictionary;
     }
 
     public void setScenes(Map<String, Scene> scenes) {
@@ -42,4 +34,7 @@ public class World {
         players.put(player.getName(), player);
     }
 
+    public Scene getScene(String location){
+        return scenes.get(location);
+    }
 }

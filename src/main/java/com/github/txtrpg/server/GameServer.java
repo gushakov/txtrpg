@@ -2,7 +2,8 @@ package com.github.txtrpg.server;
 
 import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.core.World;
-import com.github.txtrpg.json.WorldUnmarshaller;
+import com.github.txtrpg.json.GameUnmarshaller;
+import com.github.txtrpg.npc.NpcController;
 import com.github.txtrpg.tasks.DaemonTask;
 import com.github.txtrpg.tasks.ServerTask;
 import org.slf4j.Logger;
@@ -27,7 +28,9 @@ public class GameServer {
 
     private ThreadPoolTaskScheduler daemonScheduler;
 
-    private WorldUnmarshaller worldUnmarshaller;
+    private GameUnmarshaller gameUnmarshaller;
+
+    private NpcController npcController;
 
     public void setCommandsTaskExecutor(ExecutorService commandsTaskExecutor) {
         this.commandsTaskExecutor = commandsTaskExecutor;
@@ -41,13 +44,18 @@ public class GameServer {
         this.daemonScheduler = daemonScheduler;
     }
 
-    public void setWorldUnmarshaller(WorldUnmarshaller worldUnmarshaller) {
-        this.worldUnmarshaller = worldUnmarshaller;
+    public void setGameUnmarshaller(GameUnmarshaller gameUnmarshaller) {
+        this.gameUnmarshaller = gameUnmarshaller;
+    }
+
+    public void setNpcController(NpcController npcController) {
+        this.npcController = npcController;
     }
 
     @PostConstruct
     public void init() {
-        world = worldUnmarshaller.unmarshal();
+        world = gameUnmarshaller.unmarshal();
+        npcController.start(world);
         daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
     }
 

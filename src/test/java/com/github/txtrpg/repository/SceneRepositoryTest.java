@@ -1,6 +1,6 @@
 package com.github.txtrpg.repository;
 
-import com.github.txtrpg.json.WorldUnmarshaller;
+import com.github.txtrpg.json.GameUnmarshaller;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,8 +42,8 @@ public class SceneRepositoryTest {
         }
 
         @Bean
-        public WorldUnmarshaller worldLoader() {
-            WorldUnmarshaller loader = new WorldUnmarshaller();
+        public GameUnmarshaller worldLoader() {
+            GameUnmarshaller loader = new GameUnmarshaller();
             loader.setScenesFileResource(new ClassPathResource("scenes.json"));
             loader.setNpcFileResource(new ClassPathResource("npcs.json"));
             return loader;
@@ -52,7 +52,7 @@ public class SceneRepositoryTest {
     }
 
     @Autowired
-    private WorldUnmarshaller loader;
+    private GameUnmarshaller loader;
 
     @Autowired
     private GraphDatabaseService graphDb;

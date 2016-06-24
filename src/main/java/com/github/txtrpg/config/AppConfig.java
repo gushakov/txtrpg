@@ -1,7 +1,8 @@
 package com.github.txtrpg.config;
 
 import com.github.txtrpg.actions.ActionProcessor;
-import com.github.txtrpg.json.WorldUnmarshaller;
+import com.github.txtrpg.json.GameUnmarshaller;
+import com.github.txtrpg.npc.NpcController;
 import com.github.txtrpg.server.GameServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -58,10 +59,18 @@ public class AppConfig {
     }
 
     @Bean
-    public WorldUnmarshaller worldUnmarshaller() {
-        WorldUnmarshaller unmarshaller = new WorldUnmarshaller();
+    public NpcController npcController() {
+        NpcController controller = new NpcController();
+        controller.setActionProcessor(actionProcessor());
+        return controller;
+    }
+
+    @Bean
+    public GameUnmarshaller worldUnmarshaller() {
+        GameUnmarshaller unmarshaller = new GameUnmarshaller();
         unmarshaller.setScenesFileResource(new ClassPathResource("scenes.json"));
         unmarshaller.setNpcFileResource(new ClassPathResource("npcs.json"));
+        unmarshaller.setNpcController(npcController());
         return unmarshaller;
     }
 
@@ -71,8 +80,10 @@ public class AppConfig {
         server.setCommandsTaskExecutor(commandsTaskExecutor());
         server.setActionProcessor(actionProcessor());
         server.setDaemonScheduler(daemonScheduler());
-        server.setWorldUnmarshaller(worldUnmarshaller());
+        server.setGameUnmarshaller(worldUnmarshaller());
+        server.setNpcController(npcController());
         return server;
     }
+
 
 }

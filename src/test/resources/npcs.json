@@ -1,7 +1,7 @@
 [
   {
     "name": "butterfly",
-    "description": "A small yellow *butterfly* flutters around aimlessly.",
+    "description": "A small yellow #butterfly# flutters around aimlessly.",
     "spawn" : {
       "locations" : ["s3"],
       "number" : 3

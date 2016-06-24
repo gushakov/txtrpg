@@ -5,7 +5,7 @@ import com.github.txtrpg.actions.ErrorAction;
 import com.github.txtrpg.actions.WelcomeAction;
 import com.github.txtrpg.antlr4.CommandLexer;
 import com.github.txtrpg.antlr4.CommandParser;
-import com.github.txtrpg.client.CommandInterpreter;
+import com.github.txtrpg.cmd.CommandInterpreter;
 import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.World;
 import org.antlr.v4.runtime.ANTLRInputStream;

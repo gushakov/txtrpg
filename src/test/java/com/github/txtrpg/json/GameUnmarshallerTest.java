@@ -1,19 +1,18 @@
 package com.github.txtrpg.json;
 
 import com.github.txtrpg.core.*;
+import com.github.txtrpg.npc.NpcController;
+import com.github.txtrpg.npc.NpcType;
 import org.hamcrest.Matchers;
-import org.hamcrest.collection.IsArrayContainingInAnyOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -26,27 +25,33 @@ import static org.junit.Assert.assertThat;
  * @author gushakov
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {WorldUnmarshallerTest.TestConfig.class})
-public class WorldUnmarshallerTest {
+@ContextConfiguration(classes = {GameUnmarshallerTest.TestConfig.class})
+public class GameUnmarshallerTest {
 
     @Configuration
     public static class TestConfig {
 
-        @Autowired
-        private Environment env;
+        @Bean
+        public NpcController npcController() {
+            return new NpcController();
+        }
 
         @Bean
-        public WorldUnmarshaller worldUnmarshaller() {
-            WorldUnmarshaller loader = new WorldUnmarshaller();
+        public GameUnmarshaller worldUnmarshaller() {
+            GameUnmarshaller loader = new GameUnmarshaller();
             loader.setScenesFileResource(new ClassPathResource("scenes.json"));
             loader.setNpcFileResource(new ClassPathResource("npcs.json"));
+            loader.setNpcController(npcController());
             return loader;
         }
 
     }
 
     @Autowired
-    private WorldUnmarshaller worldUnmarshaller;
+    private GameUnmarshaller gameUnmarshaller;
+
+    @Autowired
+    private NpcController npcController;
 
     @Test
     public void testContainer() throws Exception {
@@ -66,7 +71,7 @@ public class WorldUnmarshallerTest {
 
     @Test
     public void testUnmarshal() throws Exception {
-        World world = worldUnmarshaller.unmarshal();
+        World world = gameUnmarshaller.unmarshal();
         assertThat(world.getScenes().values(), iterableWithSize(3));
         Scene s1 = world.getScenes().get("s1");
         Scene s2 = world.getScenes().get("s2");
@@ -88,10 +93,8 @@ public class WorldUnmarshallerTest {
 
     @Test
     public void testUnmarshallNpcs() throws Exception {
-        World world = worldUnmarshaller.unmarshal();
-        Map<String, NpcType> npcDictionary = world.getNpcDictionary();
-        assertThat(npcDictionary, notNullValue());
-        NpcType butterfly = npcDictionary.get("butterfly");
+        gameUnmarshaller.unmarshal();
+        NpcType butterfly = npcController.getNpcType("butterfly");
         assertThat(butterfly, notNullValue());
         Spawn spawn = butterfly.getSpawn();
         assertThat(spawn, notNullValue());

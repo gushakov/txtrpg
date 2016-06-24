@@ -1,4 +1,4 @@
-package com.github.txtrpg.client;
+package com.github.txtrpg.cmd;
 
 import com.github.txtrpg.actions.*;
 import com.github.txtrpg.antlr4.CommandLexer;
