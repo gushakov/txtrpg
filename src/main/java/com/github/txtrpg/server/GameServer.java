@@ -55,7 +55,7 @@ public class GameServer {
     @PostConstruct
     public void init() {
         world = gameUnmarshaller.unmarshal();
-        npcController.start(world);
+        actionProcessor.addActions(npcController.start(world));
         daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
     }
 

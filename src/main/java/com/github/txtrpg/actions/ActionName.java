@@ -12,6 +12,7 @@ public enum ActionName {
     notice,
     spawn,
     quit,
-    error
+    error,
+    noop
 
 }
