@@ -65,6 +65,13 @@ public class Scene extends Entity implements Observable {
         return exits.stream().filter(e -> e.getDir() == dir).findFirst();
     }
 
+    public Dir getRandomExitDirection(){
+        List<Exit> exits = new ArrayList<>(getExits());
+        Collections.shuffle(exits);
+        return exits.stream().findAny().get().getDir();
+    }
+
+
     public Optional<Scene> getExitTo(Dir dir) {
         Optional<Exit> exit = exits.stream().filter(e -> e.getDir() == dir).findFirst();
         return exit.isPresent() ? Optional.of(exit.get().getTo()) : Optional.empty();

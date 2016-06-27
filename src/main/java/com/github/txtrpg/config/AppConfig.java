@@ -60,9 +60,7 @@ public class AppConfig {
 
     @Bean
     public NpcController npcController() {
-        NpcController controller = new NpcController();
-        controller.setActionProcessor(actionProcessor());
-        return controller;
+        return new NpcController();
     }
 
     @Bean

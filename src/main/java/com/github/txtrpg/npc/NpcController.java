@@ -1,9 +1,6 @@
 package com.github.txtrpg.npc;
 
-import com.github.txtrpg.actions.Action;
-import com.github.txtrpg.actions.MoveAction;
-import com.github.txtrpg.actions.NoOpAction;
-import com.github.txtrpg.actions.SpawnAction;
+import com.github.txtrpg.actions.*;
 import com.github.txtrpg.core.Exit;
 import com.github.txtrpg.core.Npc;
 import com.github.txtrpg.core.Spawn;
@@ -50,15 +47,22 @@ public class NpcController {
     }
 
     public List<Action> nextActions(Npc npc) {
+        System.out.println("-----");
+        System.out.println("-----");
+        System.out.println("-----");
+        System.out.println("-----");
+        System.out.println("-----");
 
+        /*
         if (new Random(System.currentTimeMillis()).nextInt(10) >= 8) {
-            ArrayList<Exit> exits = new ArrayList<>(npc.getLocation().getExits());
-            Collections.shuffle(exits);
-            return Collections.singletonList(new MoveAction(npc, exits.stream().findAny().get().getDir()));
+            System.out.println("*");
+            return Collections.singletonList(new MoveAction(npc, npc.getLocation().getRandomExitDirection()));
         }
 
+        System.out.println(".");
         return Collections.singletonList(new NoOpAction(npc));
-
+*/
+        return Collections.singletonList(new DelayedAction(new MoveAction(npc, npc.getLocation().getRandomExitDirection()), 20));
     }
 
 }

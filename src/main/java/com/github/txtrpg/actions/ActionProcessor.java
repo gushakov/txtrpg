@@ -5,6 +5,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -39,7 +40,7 @@ public class ActionProcessor {
         while (!done && !actionsQueue.isEmpty()) {
             Action action = actionsQueue.poll();
             if (action.getTime().compareTo(clock) < 0) {
-                actionsTaskExecutor.submit(new ProcessActionTask(this, action));
+                actionsTaskExecutor.submit(new ProcessActionTask(action));
             } else {
                 done = true;
             }
