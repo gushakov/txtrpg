@@ -4,6 +4,8 @@ import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Player;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -23,6 +25,12 @@ public class Action {
         this.name = name;
         this.initiator = initiator;
         this.time = LocalDateTime.now();
+    }
+
+    public Action(ActionName name, Actor initiator, int delay) {
+        this.name = name;
+        this.initiator = initiator;
+        this.time = LocalDateTime.now().plus((long) delay * 500, ChronoUnit.MILLIS);
     }
 
     public ActionName getName() {

@@ -46,23 +46,4 @@ public class NpcController {
         return actions;
     }
 
-    public List<Action> nextActions(Npc npc) {
-        System.out.println("-----");
-        System.out.println("-----");
-        System.out.println("-----");
-        System.out.println("-----");
-        System.out.println("-----");
-
-        /*
-        if (new Random(System.currentTimeMillis()).nextInt(10) >= 8) {
-            System.out.println("*");
-            return Collections.singletonList(new MoveAction(npc, npc.getLocation().getRandomExitDirection()));
-        }
-
-        System.out.println(".");
-        return Collections.singletonList(new NoOpAction(npc));
-*/
-        return Collections.singletonList(new DelayedAction(new MoveAction(npc, npc.getLocation().getRandomExitDirection()), 20));
-    }
-
 }

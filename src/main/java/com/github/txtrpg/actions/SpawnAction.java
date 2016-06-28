@@ -28,6 +28,6 @@ public class SpawnAction extends Action {
         Scene location = npc.getLocation();
         logger.debug("Spawning NPC: {} at location {}", npc, location);
         location.getRoom().enter(npc);
-        actions.addAll(npcController.nextActions(npc));
+        actions.add(new DelayedAction(new MoveAction(npc, location.getRandomExitDirection()), 10));
     }
 }

@@ -7,6 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.TemporalField;
 import java.util.Collections;
 
 /**
@@ -25,6 +27,7 @@ public class DaemonTask implements Runnable {
 
     @Override
     public void run() {
-        actionProcessor.processActions(LocalDateTime.now());
+        final LocalDateTime now = LocalDateTime.now();
+        actionProcessor.processActions(now);
     }
 }

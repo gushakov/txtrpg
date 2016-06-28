@@ -14,17 +14,20 @@ public class ProcessActionTask implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(ProcessActionTask.class);
 
+    private ActionProcessor actionProcessor;
+
     private Action action;
 
-    public ProcessActionTask(Action action) {
+    public ProcessActionTask(ActionProcessor actionProcessor, Action action) {
         logger.debug("Created ProcessActionTask {}", this);
+        this.actionProcessor = actionProcessor;
         this.action = action;
     }
 
     @Override
     public void run() {
         logger.debug("Processing action {}", action);
-        action.process();
+        actionProcessor.addActions(action.process());
     }
 
 }
