@@ -5,6 +5,7 @@ import com.github.txtrpg.core.World;
 import com.github.txtrpg.json.GameUnmarshaller;
 import com.github.txtrpg.npc.NpcController;
 import com.github.txtrpg.tasks.DaemonTask;
+import com.github.txtrpg.tasks.NpcControlTask;
 import com.github.txtrpg.tasks.ServerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +55,11 @@ public class GameServer {
 
     @PostConstruct
     public void init() {
-        world = gameUnmarshaller.unmarshal();
-        actionProcessor.addActions(npcController.start(world));
+        gameUnmarshaller.unmarshal();
+        world = gameUnmarshaller.getWorld();
+        npcController.setWorld(world);
+        npcController.setNpcDictionary(gameUnmarshaller.getNpcDictionary());
+        daemonScheduler.scheduleAtFixedRate(new NpcControlTask(actionProcessor, npcController), 500);
         daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
     }
 

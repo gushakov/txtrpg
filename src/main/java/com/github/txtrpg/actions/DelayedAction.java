@@ -16,7 +16,6 @@ public class DelayedAction extends Action {
     public DelayedAction(Action delegate, int delay) {
         super(delegate.getName(), delegate.getInitiator(), delay);
         this.delegate = delegate;
-        System.out.println(">>>>>>>>>>>>>>>>"+getTime());
     }
 
     @Override

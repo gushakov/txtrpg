@@ -30,7 +30,7 @@ public class Action {
     public Action(ActionName name, Actor initiator, int delay) {
         this.name = name;
         this.initiator = initiator;
-        this.time = LocalDateTime.now().plus((long) delay * 500, ChronoUnit.MILLIS);
+        this.time = LocalDateTime.now().plus((long) delay, ChronoUnit.SECONDS);
     }
 
     public ActionName getName() {

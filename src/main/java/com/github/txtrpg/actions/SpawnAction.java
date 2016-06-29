@@ -3,7 +3,6 @@ package com.github.txtrpg.actions;
 import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Npc;
 import com.github.txtrpg.core.Scene;
-import com.github.txtrpg.npc.NpcController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,11 +14,8 @@ import java.util.Collection;
 public class SpawnAction extends Action {
     private static final Logger logger = LoggerFactory.getLogger(SpawnAction.class);
 
-    private NpcController npcController;
-
-    public SpawnAction(Npc npc, NpcController npcController) {
+    public SpawnAction(Npc npc) {
         super(ActionName.spawn, npc);
-        this.npcController = npcController;
     }
 
     @Override
@@ -28,6 +24,5 @@ public class SpawnAction extends Action {
         Scene location = npc.getLocation();
         logger.debug("Spawning NPC: {} at location {}", npc, location);
         location.getRoom().enter(npc);
-        actions.add(new DelayedAction(new MoveAction(npc, location.getRandomExitDirection()), 10));
     }
 }

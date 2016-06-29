@@ -40,7 +40,7 @@ public class AppConfig {
     @Bean
     public ThreadPoolTaskExecutor actionsTaskExecutor() {
         ThreadPoolTaskExecutor taskExecutor = new ThreadPoolTaskExecutor();
-        taskExecutor.setCorePoolSize(3);
+        taskExecutor.setCorePoolSize(1);
         return taskExecutor;
     }
 
@@ -68,7 +68,6 @@ public class AppConfig {
         GameUnmarshaller unmarshaller = new GameUnmarshaller();
         unmarshaller.setScenesFileResource(new ClassPathResource("scenes.json"));
         unmarshaller.setNpcFileResource(new ClassPathResource("npcs.json"));
-        unmarshaller.setNpcController(npcController());
         return unmarshaller;
     }
 

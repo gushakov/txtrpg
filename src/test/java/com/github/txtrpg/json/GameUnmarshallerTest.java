@@ -41,7 +41,6 @@ public class GameUnmarshallerTest {
             GameUnmarshaller loader = new GameUnmarshaller();
             loader.setScenesFileResource(new ClassPathResource("scenes.json"));
             loader.setNpcFileResource(new ClassPathResource("npcs.json"));
-            loader.setNpcController(npcController());
             return loader;
         }
 
@@ -71,7 +70,8 @@ public class GameUnmarshallerTest {
 
     @Test
     public void testUnmarshal() throws Exception {
-        World world = gameUnmarshaller.unmarshal();
+        gameUnmarshaller.unmarshal();
+        World world = gameUnmarshaller.getWorld();
         assertThat(world.getScenes().values(), iterableWithSize(3));
         Scene s1 = world.getScenes().get("s1");
         Scene s2 = world.getScenes().get("s2");
@@ -94,6 +94,8 @@ public class GameUnmarshallerTest {
     @Test
     public void testUnmarshallNpcs() throws Exception {
         gameUnmarshaller.unmarshal();
+        npcController.setWorld(gameUnmarshaller.getWorld());
+        npcController.setNpcDictionary(gameUnmarshaller.getNpcDictionary());
         NpcType butterfly = npcController.getNpcType("butterfly");
         assertThat(butterfly, notNullValue());
         Spawn spawn = butterfly.getSpawn();

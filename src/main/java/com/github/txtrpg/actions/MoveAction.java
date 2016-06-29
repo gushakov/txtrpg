@@ -39,14 +39,12 @@ public class MoveAction extends Action {
             from.getRoom().leave(actor);
             to.getRoom().enter(actor);
             actor.setLocation(to);
-
+            if (actor instanceof Player){
+                actions.add(new LookAction(actor));
+            }
         } else {
             actions.add(new ErrorAction(actor, "You cannot go -%s- from here.", dir.getDirection()));
         }
     }
 
-    @Override
-    protected void processForPlayer(Collection<Action> actions, Player player) {
-        actions.add(new LookAction(player));
-    }
 }

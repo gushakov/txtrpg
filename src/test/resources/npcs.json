@@ -3,8 +3,8 @@
     "name": "butterfly",
     "description": "A small yellow #butterfly# flutters around aimlessly.",
     "spawn" : {
-      "locations" : ["s3"],
-      "number" : 3
+      "locations" : ["s2", "s3"],
+      "number" : 1
     }
   }
 ]

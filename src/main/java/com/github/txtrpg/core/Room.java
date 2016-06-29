@@ -32,13 +32,19 @@ public class Room<T extends Actor> {
                 .map(Player.class::cast);
     }
 
-    public synchronized List<Player> getMatchingPlayers(String prefix) {
-        return actors.stream()
-                .filter(a -> a instanceof Player && a.getName().toLowerCase().startsWith(prefix.toLowerCase()))
-                .map(Player.class::cast).collect(Collectors.toList());
+    public synchronized Stream<Player> getOtherMatchingPlayers(Player player, String prefix) {
+        return getOtherPlayers(player).filter(p -> p.getName().toLowerCase().startsWith(prefix.toLowerCase()));
+    }
+
+    public synchronized Stream<Npc> getNpcs(){
+        return actors.stream().filter(Npc.class::isInstance).map(Npc.class::cast);
     }
 
     public synchronized Stream<T> getOtherActors(Actor actor) {
         return actors.stream().filter(a -> !a.equals(actor));
+    }
+
+    public synchronized Stream<T> getOtherMatchingActors(Actor actor, String prefix){
+        return getOtherActors(actor).filter(a -> a.getName().toLowerCase().startsWith(prefix.toLowerCase()));
     }
 }

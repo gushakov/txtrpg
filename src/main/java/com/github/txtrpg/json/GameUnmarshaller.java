@@ -28,7 +28,9 @@ public class GameUnmarshaller {
 
     private Resource npcFileResource;
 
-    private NpcController npcController;
+    private World world;
+
+    private  Map<String, NpcType> npcDictionary;
 
     public void setScenesFileResource(Resource scenesFileResource) {
         this.scenesFileResource = scenesFileResource;
@@ -38,17 +40,19 @@ public class GameUnmarshaller {
         this.npcFileResource = npcFileResource;
     }
 
-    public void setNpcController(NpcController npcController) {
-        this.npcController = npcController;
+    public World getWorld() {
+        return world;
     }
 
-    public World unmarshal() {
+    public Map<String, NpcType> getNpcDictionary() {
+        return npcDictionary;
+    }
+
+    public void unmarshal() {
 
         Assert.notNull(scenesFileResource);
         Assert.notNull(npcFileResource);
-        Assert.notNull(npcController);
-
-        World world = new World();
+        world = new World();
         ObjectMapper mapper = new ObjectMapper();
         try {
             // load scenes from json
@@ -83,16 +87,14 @@ public class GameUnmarshaller {
                     new TypeReference<List<NpcType>>() {
                     });
 
-            Map<String, NpcType> npcDictionary = jsonNpcs.stream()
+            npcDictionary = jsonNpcs.stream()
                     .collect(Collectors.toMap(NpcType::getName, Function.identity()));
 
-            npcController.setNpcDictionary(npcDictionary);
 
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         }
 
-        return world;
     }
 
 }

@@ -44,7 +44,7 @@ public class ActionProcessor {
         int counter = 0;
         // start processing next action frame
         final long frameMillis = clock.atZone(ZoneId.of("Europe/Paris")).toInstant().toEpochMilli();
-        logger.debug("START frame: [{}], queue size: {}", frameMillis, actionsQueue.size());
+//        logger.debug("START frame: [{}], queue size: {}", frameMillis, actionsQueue.size());
         boolean done = false;
         while (!done && !actionsQueue.isEmpty()) {
             Action action = actionsQueue.peek();
@@ -56,6 +56,6 @@ public class ActionProcessor {
                 done = true;
             }
         }
-        logger.debug("END frame: [{}], queue size: {}, processed: {}", frameMillis, actionsQueue.size(), counter);
+//        logger.debug("END frame: [{}], queue size: {}, processed: {}", frameMillis, actionsQueue.size(), counter);
     }
 }

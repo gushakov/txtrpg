@@ -17,12 +17,16 @@ public class Entity implements Visible, Comparable<Entity> {
 
     private String description;
 
+    private long uuid;
+
     public Entity() {
-        this.name = "e" + Generators.timeBasedGenerator().generate().timestamp();
+        this.uuid = Generators.timeBasedGenerator().generate().timestamp();
+        this.name = "e" + this.uuid;
         this.description = "entity";
     }
 
     public Entity(String name, String description) {
+        this();
         this.name = name;
         this.description = description;
     }
@@ -42,6 +46,6 @@ public class Entity implements Visible, Comparable<Entity> {
 
     @Override
     public int compareTo(Entity entity) {
-        return name != null && entity != null && entity.getName() != null ? name.compareTo(entity.getName()) : 0;
+        return Long.valueOf(uuid).compareTo(entity.uuid);
     }
 }
