@@ -11,6 +11,8 @@ public class Spawn {
 
     private int number;
 
+    private String chance;
+
     public Spawn() {
     }
 
@@ -20,5 +22,9 @@ public class Spawn {
 
     public int getNumber() {
         return number;
+    }
+
+    public String getChance() {
+        return chance;
     }
 }

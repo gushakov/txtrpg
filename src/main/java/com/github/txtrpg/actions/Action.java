@@ -67,4 +67,13 @@ public class Action {
     protected void processForNonPlayer(Collection<Action> actions, Actor actor) {
     }
 
+    @Override
+    public String toString() {
+        return "[" +
+                name +
+                ":" +
+                " " +
+                initiator +
+                "]";
+    }
 }

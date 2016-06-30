@@ -48,4 +48,9 @@ public class Entity implements Visible, Comparable<Entity> {
     public int compareTo(Entity entity) {
         return Long.valueOf(uuid).compareTo(entity.uuid);
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

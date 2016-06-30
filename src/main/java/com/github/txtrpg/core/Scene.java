@@ -100,4 +100,5 @@ public class Scene extends Entity implements Observable {
         room.stream().filter(a -> !a.getName().equals(actor.getName())).forEach(visibles::add);
         return visibles;
     }
+
 }
