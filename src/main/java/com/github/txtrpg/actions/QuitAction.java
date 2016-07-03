@@ -15,7 +15,7 @@ public class QuitAction extends Action {
 
     @Override
     protected void processForPlayer(Collection<Action> actions, Player player) {
-        player.getLocation().getRoom().leave(player);
+        player.getLocation().getRoom().remove(player);
         player.sendMessage("Bye.");
         player.doQuit();
     }

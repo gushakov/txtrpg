@@ -22,7 +22,8 @@ public class Player extends Actor {
     public Player(String name, String description, Scene location, Socket socket) {
         super(name, description, location);
         this.quit = false;
-        this.getLocation().getRoom().enter(this);
+        this.getLocation().getRoom().add(this);
+        setHealth(new Dice(100).roll());
         try {
             socketWriter = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
@@ -45,7 +46,9 @@ public class Player extends Actor {
     }
 
     public void updateStatus() {
-        socketWriter.write(">");
+        socketWriter.write(ConsoleUtils.color("[-\u2661- +" +
+                getHealth() +
+                "+][\uD83C\uDF00  +23+]") + " >");
         socketWriter.flush();
     }
 

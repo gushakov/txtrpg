@@ -1,7 +1,5 @@
 package com.github.txtrpg.npc;
 
-import com.github.txtrpg.core.Spawn;
-
 /**
  * @author gushakov
  */
@@ -11,9 +9,15 @@ public class NpcType {
 
     private String description;
 
+    private int health;
+
     private Spawn spawn;
 
     public NpcType() {
+    }
+
+    public synchronized int getHealth() {
+        return health;
     }
 
     public String getName() {

@@ -1,4 +1,4 @@
-package com.github.txtrpg.core;
+package com.github.txtrpg.npc;
 
 import java.util.List;
 

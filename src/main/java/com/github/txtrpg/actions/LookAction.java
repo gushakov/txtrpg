@@ -35,9 +35,15 @@ public class LookAction extends Action {
             if (target != null) {
                 player.sendMessage(target.getDescription());
             } else {
-                player.sendMessage(player.getLocation().getDescription());
-                player.getLocation().showTo(player).stream()
-                        .forEach(v -> player.sendMessage(v.getDescription()));
+                Collection<Visible> visibles = player.getLocation().showTo(player);
+                if (visibles.isEmpty()){
+                    player.sendMessage(player.getLocation().getDescription());
+                }
+                else {
+                    player.sendMessage(player.getLocation().getDescription(), true, false);
+                    visibles.stream()
+                            .forEach(v -> player.sendMessage(v.getDescription()));
+                }
             }
         }
         return Collections.emptyList();

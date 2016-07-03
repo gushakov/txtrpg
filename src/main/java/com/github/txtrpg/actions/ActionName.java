@@ -11,6 +11,8 @@ public enum ActionName {
     look,
     notice,
     spawn,
+    combat,
+    die,
     quit,
     error,
     noop

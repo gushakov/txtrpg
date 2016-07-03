@@ -49,6 +49,7 @@ public class NpcController {
 
                     // make npc
                     final Npc npc = new Npc(type.getName(), type.getDescription(), world.getScene(location));
+                    npc.setHealth(type.getHealth());
                     actions.add(new SpawnAction(npc));
                 }
             }

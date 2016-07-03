@@ -19,11 +19,11 @@ public class Room<T extends Actor> {
         return actors.stream();
     }
 
-    public synchronized void enter(T actor) {
+    public synchronized void add(T actor) {
         actors.add(actor);
     }
 
-    public synchronized void leave(T actor) {
+    public synchronized void remove(T actor) {
         actors.remove(actor.getName());
     }
 

@@ -23,6 +23,6 @@ public class SpawnAction extends Action {
         Npc npc = (Npc) getInitiator();
         Scene location = npc.getLocation();
         logger.debug("Spawning NPC: {} at location {}", npc, location);
-        location.getRoom().enter(npc);
+        location.getRoom().add(npc);
     }
 }

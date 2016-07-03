@@ -3,6 +3,7 @@ package com.github.txtrpg.json;
 import com.github.txtrpg.core.*;
 import com.github.txtrpg.npc.NpcController;
 import com.github.txtrpg.npc.NpcType;
+import com.github.txtrpg.npc.Spawn;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;

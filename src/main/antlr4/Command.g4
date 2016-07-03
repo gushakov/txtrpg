@@ -47,6 +47,7 @@ grammar Command;
 
 command : move EOF
     | look EOF
+    | attack EOF
     | quit EOF
     ;
 
@@ -61,6 +62,11 @@ move : 'n'
 look : 'look' { variant = 1; }
     | 'look' WORD { param1 = $WORD.text; variant = 2; }
     | 'look' WORD NUMBER { param1 = $WORD.text; param2 = $NUMBER.text; variant = 3; }
+    ;
+
+attack : 'attack' { variant = 1; }
+    | 'attack' WORD { param1 = $WORD.text; variant = 2; }
+    | 'attack' WORD NUMBER { param1 = $WORD.text; param2 = $NUMBER.text; variant = 3; }
     ;
 
 quit : 'quit' | 'exit';

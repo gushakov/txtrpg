@@ -54,6 +54,12 @@ public class CommandInterpreter extends CommandBaseListener {
     }
 
     @Override
+    public void enterAttack(@NotNull CommandParser.AttackContext ctx) {
+        actionProcessor.addAction(new CombatProcessor(parser, player).process());
+        super.enterAttack(ctx);
+    }
+
+    @Override
     public void exitEveryRule(@NotNull ParserRuleContext ctx) {
         parser.resetParams();
         super.exitEveryRule(ctx);

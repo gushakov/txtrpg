@@ -7,9 +7,7 @@ import com.github.txtrpg.core.Scene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -36,8 +34,8 @@ public class MoveAction extends Action {
         if (toOpt.isPresent()) {
             Scene to = toOpt.get();
             logger.debug("Moving {} from {} to {}", actor, from, to);
-            from.getRoom().leave(actor);
-            to.getRoom().enter(actor);
+            from.getRoom().remove(actor);
+            to.getRoom().add(actor);
             actor.setLocation(to);
             if (actor instanceof Player){
                 actions.add(new LookAction(actor));
