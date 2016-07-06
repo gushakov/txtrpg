@@ -28,24 +28,26 @@ public class LookAction extends Action {
     }
 
     @Override
-    public synchronized Collection<Action> process() {
-        Actor actor = getInitiator();
-        if (actor instanceof Player) {
-            Player player = (Player) actor;
-            if (target != null) {
-                player.sendMessage(target.getDescription());
-            } else {
-                Collection<Visible> visibles = player.getLocation().showTo(player);
-                if (visibles.isEmpty()){
-                    player.sendMessage(player.getLocation().getDescription());
-                }
-                else {
-                    player.sendMessage(player.getLocation().getDescription(), true, false);
-                    visibles.stream()
-                            .forEach(v -> player.sendMessage(v.getDescription()));
+    public Collection<Action> process() {
+        synchronized (lock){
+            Actor actor = getInitiator();
+            if (actor instanceof Player) {
+                Player player = (Player) actor;
+                if (target != null) {
+                    player.sendMessage(target.getDescription());
+                } else {
+                    Collection<Visible> visibles = player.getLocation().showTo(player);
+                    if (visibles.isEmpty()){
+                        player.sendMessage(player.getLocation().getDescription());
+                    }
+                    else {
+                        player.sendMessage(player.getLocation().getDescription(), true, false);
+                        visibles.stream()
+                                .forEach(v -> player.sendMessage(v.getDescription()));
+                    }
                 }
             }
+            return Collections.emptyList();
         }
-        return Collections.emptyList();
     }
 }

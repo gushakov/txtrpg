@@ -19,7 +19,7 @@ public class DelayedAction extends Action {
     }
 
     @Override
-    public synchronized Collection<Action> process() {
+    public Collection<Action> process() {
        return delegate.process();
     }
 }

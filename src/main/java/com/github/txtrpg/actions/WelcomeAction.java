@@ -17,19 +17,20 @@ public class WelcomeAction extends Action {
     }
 
     @Override
-    public synchronized Collection<Action> process() {
+    public Collection<Action> process() {
+        synchronized (lock){
+            List<Action> actions = new ArrayList<>();
+            Actor actor = getInitiator();
+            if (actor instanceof Player) {
+                Player player = (Player) actor;
+                player.sendMessage("+-------------------------------------------+", false, false);
+                player.sendMessage("|             *WELCOME*                       |", true, false);
+                player.sendMessage("+-------------------------------------------+", false, false);
 
-        List<Action> result = new ArrayList<>();
-        Actor actor = getInitiator();
-        if (actor instanceof Player) {
-            Player player = (Player) actor;
-            player.sendMessage("+-------------------------------------------+", false, false);
-            player.sendMessage("|             *WELCOME*                       |", true, false);
-            player.sendMessage("+-------------------------------------------+", false, false);
-
-            result.add(new LookAction(player));
+                actions.add(new LookAction(player));
+            }
+            actor.getLocation().getRoom().getOtherActors(actor).forEach(a -> actions.add(new NoticeAction(a, actor)));
+            return actions;
         }
-        actor.getLocation().getRoom().getOtherActors(actor).forEach(a -> result.add(new NoticeAction(a, actor)));
-        return result;
     }
 }

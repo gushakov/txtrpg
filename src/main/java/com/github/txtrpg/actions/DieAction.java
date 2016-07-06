@@ -27,8 +27,6 @@ public class DieAction extends Action {
             scene.getRoom().remove(npc);
             // add corpse to the ground
             scene.getGround().put(corpse);
-            System.out.println(">>>>>>"+scene+">>>>>>>"+scene.getGround().stream().count());
-
         }
     }
 }

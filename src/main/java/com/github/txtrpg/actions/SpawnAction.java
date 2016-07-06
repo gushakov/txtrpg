@@ -22,7 +22,7 @@ public class SpawnAction extends Action {
     protected void processForActor(Collection<Action> actions, Actor actor) {
         Npc npc = (Npc) getInitiator();
         Scene location = npc.getLocation();
-        logger.debug("Spawning NPC: {} at location {}", npc, location);
+        logger.debug("Spawning {} at location {}", npc, location);
         location.getRoom().add(npc);
     }
 }

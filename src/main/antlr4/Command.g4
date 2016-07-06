@@ -72,7 +72,6 @@ attack : 'attack' { variant = 1; }
 quit : 'quit' | 'exit';
 
 // tokens
-//WORD : ('a'..'z'|'A'..'Z')+;
 WORD : ([a-zA-Z]+[0-9]*)+;
 NUMBER : ('0'..'9')+;
 

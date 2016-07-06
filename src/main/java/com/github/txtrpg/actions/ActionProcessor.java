@@ -32,30 +32,26 @@ public class ActionProcessor {
         actionsQueue = new ConcurrentLinkedQueue<>();
     }
 
-    public synchronized void addAction(Action action) {
+    public void addAction(Action action) {
         actionsQueue.add(action);
     }
 
-    public synchronized void addActions(Collection<? extends Action> actions) {
+    public void addActions(Collection<? extends Action> actions) {
         actionsQueue.addAll(actions);
     }
 
-    public synchronized void processActions(LocalDateTime clock) {
-        int counter = 0;
+    public void processActions(LocalDateTime clock) {
         // start processing next action frame
-        final long frameMillis = clock.atZone(ZoneId.of("Europe/Paris")).toInstant().toEpochMilli();
-//        logger.debug("START frame: [{}], queue size: {}", frameMillis, actionsQueue.size());
         boolean done = false;
         while (!done && !actionsQueue.isEmpty()) {
             Action action = actionsQueue.peek();
-            if (action.getTime().isBefore(clock)) {
+            // consider action for processing only if it has not started already (from different task or thread)
+            if (!action.isStarted() && action.getTime().isBefore(clock)) {
                 actionsTaskExecutor.submit(new ProcessActionTask(this, action));
-                actionsQueue.poll();
-                counter++;
+                actionsQueue.remove(action);
             } else {
                 done = true;
             }
         }
-//        logger.debug("END frame: [{}], queue size: {}, processed: {}", frameMillis, actionsQueue.size(), counter);
     }
 }
