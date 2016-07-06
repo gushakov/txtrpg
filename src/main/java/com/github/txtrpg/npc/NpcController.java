@@ -2,6 +2,9 @@ package com.github.txtrpg.npc;
 
 import com.github.txtrpg.actions.*;
 import com.github.txtrpg.core.*;
+import com.github.txtrpg.json.CorpseType;
+import com.github.txtrpg.json.NpcType;
+import com.github.txtrpg.json.SpawnType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +46,7 @@ public class NpcController {
             if (!npcsCount.containsKey(type.getName()) || npcsCount.get(type.getName()) < type.getSpawn().getNumber()) {
                 // can spawn another npc of this type, if successful
                 if (new Dice(type.getSpawn().getChance()).success()){
-                    final Spawn spawn = type.getSpawn();
+                    final SpawnType spawn = type.getSpawn();
                     final List<String> locations = spawn.getLocations();
                     final String location = locations.get(new Dice(locations.size()).index());
 
@@ -61,13 +64,28 @@ public class NpcController {
     public synchronized List<Action> activate(){
               List<Action> actions = new ArrayList<>();
         getNpcs().parallel().forEach(npc -> {
-            final int nextInt = new Random(System.currentTimeMillis()).nextInt(30);
-            if (nextInt == 1){
-                logger.debug("Activating {}", npc);
-                actions.add(new MoveAction(npc, npc.getLocation().getRandomExitDirection()));
+            if (npc.isAlive()) {
+                // choose possible actions for this npc
+                // TODO: implement
             }
+            else {
+                // if npc is dead, create a corpse
+                final NpcType npcType = npcDictionary.get(npc.getName());
+                final CorpseType corpseType = npcType.getCorpse();
+                actions.add(new DieAction(npc, createCorpse(corpseType)));
+            }
+
         });
         return actions;
+    }
+
+    private Corpse createCorpse(CorpseType corpseType){
+        final Corpse corpse = new Corpse(corpseType.getName(), corpseType.getDescription());
+
+        corpseType.getItems().stream()
+                .forEach(itemType -> corpse.put(new Item(itemType.getName(), itemType.getDescription(), itemType.getWeight())));
+
+        return corpse;
     }
 
     private Stream<Npc> getNpcs(){

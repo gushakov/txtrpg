@@ -1,7 +1,5 @@
 package com.github.txtrpg.core;
 
-import com.github.txtrpg.npc.NpcType;
-
 import java.util.HashMap;
 import java.util.Map;
 

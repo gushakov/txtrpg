@@ -50,7 +50,7 @@ public class CommandInterpreterTest {
         Scene s1 = new Scene("s1", "Forest path");
         Scene s2 = new Scene("s2", "Forest meadow");
         s1.addExit(Dir.n, s2);
-        Container<Item> ground = new Container<>();
+        Ground ground = new Ground();
         ground.put(new Item("a little bottle", "a little bottle", 1));
         ground.put(new Item("old copper coin", "old copper _coin_"));
         ground.put(new Item("silver coin", "silver _coin_"));

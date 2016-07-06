@@ -1,8 +1,6 @@
 package com.github.txtrpg.json;
 
 import com.github.txtrpg.core.*;
-import com.github.txtrpg.npc.NpcController;
-import com.github.txtrpg.npc.NpcType;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.type.TypeReference;
 import org.slf4j.Logger;
@@ -67,7 +65,7 @@ public class GameUnmarshaller {
             for (Scene scene : scenesMap.values()) {
                 // create a ground container, if needed
                 if (scene.getGround() == null) {
-                    scene.setGround(new Container<>("ground", "ground"));
+                    scene.setGround(new Ground());
                 }
 
                 // for each exit in every scene update a "from" scene and the "to" to point to the

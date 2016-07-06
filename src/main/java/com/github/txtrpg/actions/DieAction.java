@@ -1,6 +1,7 @@
 package com.github.txtrpg.actions;
 
 import com.github.txtrpg.core.Actor;
+import com.github.txtrpg.core.Corpse;
 import com.github.txtrpg.core.Npc;
 import com.github.txtrpg.core.Scene;
 
@@ -10,8 +11,11 @@ import java.util.Collection;
  * @author gushakov
  */
 public class DieAction extends Action {
-    public DieAction(ActionName name, Actor initiator) {
+    private Corpse corpse;
+
+    public DieAction(Actor initiator, Corpse corpse) {
         super(ActionName.die, initiator);
+        this.corpse = corpse;
     }
 
     @Override
@@ -21,7 +25,9 @@ public class DieAction extends Action {
             // remove npc from the scene
             Scene scene = npc.getLocation();
             scene.getRoom().remove(npc);
-            // create a corpse
+            // add corpse to the ground
+            scene.getGround().put(corpse);
+            System.out.println(">>>>>>"+scene+">>>>>>>"+scene.getGround().stream().count());
 
         }
     }

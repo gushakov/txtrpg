@@ -2,6 +2,7 @@ package com.github.txtrpg.actions;
 
 import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Player;
+import com.github.txtrpg.npc.NpcController;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * @author gushakov
  */
-public class Action {
+public abstract class Action {
 
     private ActionName name;
 

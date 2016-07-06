@@ -60,7 +60,7 @@ public class GameServer {
         world = gameUnmarshaller.getWorld();
         npcController.setWorld(world);
         npcController.setNpcDictionary(gameUnmarshaller.getNpcDictionary());
-        //daemonScheduler.scheduleAtFixedRate(new NpcActivateTask(actionProcessor, npcController), 500);
+        daemonScheduler.scheduleAtFixedRate(new NpcActivateTask(actionProcessor, npcController), 500);
         daemonScheduler.scheduleAtFixedRate(new NpcSpawnTask(actionProcessor, npcController), 1000);
         daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
     }

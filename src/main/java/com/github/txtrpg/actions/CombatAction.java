@@ -11,7 +11,6 @@ import java.util.Collection;
  */
 public class CombatAction extends Action {
 
-
     private Actor target;
 
     public CombatAction(Actor initiator, Actor target) {
@@ -29,7 +28,7 @@ public class CombatAction extends Action {
                 roll +
                 "+ of damage.");
         if (!target.isAlive()){
-            player.sendMessage("\uD83D\uDC80 #" +
+            player.sendMessage("#" +
                     target.getName() +
                     "# is +dead+.");
         }

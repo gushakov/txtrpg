@@ -2,18 +2,18 @@
   {
     "name": "butterfly",
     "description": "A small yellow #butterfly# flutters around aimlessly.",
-    "health": 10,
+    "health": 5,
     "spawn" : {
       "locations" : ["s1","s2", "s3"],
       "number" : 1,
       "chance" : "1/10"
     },
-    "drop" : {
+    "corpse" : {
       "name" : "corpse of a butterfly",
       "description" : "A lifeless _corpse of a butterfly_ is lying on the ground.",
       "items" : [
         {
-          "name": "butterfly wing",
+          "name": "wing of a butterfly",
           "description": "Seems to be a _wing_ of a butterfly.",
           "weight": 0
         }

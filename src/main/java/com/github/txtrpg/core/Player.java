@@ -46,9 +46,9 @@ public class Player extends Actor {
     }
 
     public void updateStatus() {
-        socketWriter.write(ConsoleUtils.color("[-\u2661- +" +
+        socketWriter.write(ConsoleUtils.color("[-H:-+" +
                 getHealth() +
-                "+][\uD83C\uDF00  +23+]") + " >");
+                "+][#M:#+23+]") + ">");
         socketWriter.flush();
     }
 

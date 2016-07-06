@@ -75,7 +75,7 @@ public abstract class CommandProcessor {
         List<Entity> candidates = new ArrayList<>();
         final Scene location = player.getLocation();
         candidates.addAll(location.getGround().find(prefix));
-        candidates.addAll(location.getRoom().getOtherMatchingPlayers(player, prefix).collect(Collectors.toList()));
+//        candidates.addAll(location.getRoom().getOtherMatchingPlayers(player, prefix).collect(Collectors.toList()));
         candidates.addAll(location.getRoom().getOtherMatchingActors(player, prefix).collect(Collectors.toList()));
         return candidates;
     }

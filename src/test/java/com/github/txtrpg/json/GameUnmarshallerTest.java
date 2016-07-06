@@ -2,8 +2,6 @@ package com.github.txtrpg.json;
 
 import com.github.txtrpg.core.*;
 import com.github.txtrpg.npc.NpcController;
-import com.github.txtrpg.npc.NpcType;
-import com.github.txtrpg.npc.Spawn;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,12 +12,16 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.collection.IsIterableWithSize.iterableWithSize;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 /**
@@ -95,12 +97,16 @@ public class GameUnmarshallerTest {
     @Test
     public void testUnmarshallNpcs() throws Exception {
         gameUnmarshaller.unmarshal();
-        npcController.setWorld(gameUnmarshaller.getWorld());
-        npcController.setNpcDictionary(gameUnmarshaller.getNpcDictionary());
-        NpcType butterfly = npcController.getNpcType("butterfly");
-        assertThat(butterfly, notNullValue());
-        Spawn spawn = butterfly.getSpawn();
-        assertThat(spawn, notNullValue());
-        assertThat(spawn.getLocations(), Matchers.contains("s3"));
+        final Map<String, NpcType> npcDictionary = gameUnmarshaller.getNpcDictionary();
+        final NpcType butterfly = npcDictionary.get("butterfly");
+        SpawnType spawnType = butterfly.getSpawn();
+        assertThat(spawnType, notNullValue());
+        assertThat(spawnType.getLocations(), Matchers.contains("s1", "s2", "s3"));
+        final CorpseType corpseType = butterfly.getCorpse();
+        assertNotNull(corpseType);
+        List<ItemType> itemTypes = corpseType.getItems();
+        assertThat(itemTypes, Matchers.iterableWithSize(1));
+        ItemType wing = itemTypes.get(0);
+        assertThat(wing, hasProperty("name", equalTo("wing of a butterfly")));
     }
 }

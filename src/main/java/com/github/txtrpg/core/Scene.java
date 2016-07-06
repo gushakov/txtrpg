@@ -17,19 +17,19 @@ public class Scene extends Entity implements Observable {
     @Fetch
     private Set<Exit> exits;
 
-    private Container<Item> ground;
+    private Ground ground;
 
     private Room<Actor> room;
 
     public Scene() {
-        this.ground = new Container<>();
+        this.ground = new Ground();
         this.room = new Room<>();
     }
 
     public Scene(String name, String description) {
         super(name, description);
         this.exits = new HashSet<>();
-        this.ground = new Container<>();
+        this.ground = new Ground();
         this.room = new Room<>();
     }
 
@@ -45,7 +45,7 @@ public class Scene extends Entity implements Observable {
         return ground;
     }
 
-    public void setGround(Container<Item> ground) {
+    public void setGround(Ground ground) {
         this.ground = ground;
     }
 

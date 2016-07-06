@@ -1,11 +1,11 @@
-package com.github.txtrpg.npc;
+package com.github.txtrpg.json;
 
 import java.util.List;
 
 /**
  * @author gushakov
  */
-public class Spawn {
+public class SpawnType {
 
     private List<String> locations;
 
@@ -13,7 +13,7 @@ public class Spawn {
 
     private String chance;
 
-    public Spawn() {
+    public SpawnType() {
     }
 
     public List<String> getLocations() {
