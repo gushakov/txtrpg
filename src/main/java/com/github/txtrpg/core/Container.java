@@ -1,14 +1,16 @@
 package com.github.txtrpg.core;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * @author gushakov
  */
-public class Container<T extends Item> extends Item {
+public class Container<T extends Item> extends Item implements Observable {
 
     private CollectionOfEntities<T> items;
 
@@ -79,4 +81,8 @@ public class Container<T extends Item> extends Item {
         return fixed ? emptyWeight : emptyWeight + items.stream().mapToInt(Item::getWeight).sum();
     }
 
+    @Override
+    public Collection<Visible> showTo(Actor actor) {
+        return items.stream().map(Visible.class::cast).collect(Collectors.toList());
+    }
 }

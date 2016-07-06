@@ -1,6 +1,7 @@
 package com.github.txtrpg.actions;
 
 import com.github.txtrpg.core.Actor;
+import com.github.txtrpg.core.Observable;
 import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.Visible;
 
@@ -35,6 +36,10 @@ public class LookAction extends Action {
                 Player player = (Player) actor;
                 if (target != null) {
                     player.sendMessage(target.getDescription());
+                    if (target instanceof Observable){
+                        ((Observable)target).showTo(player)
+                                .forEach(visible -> player.sendMessage(visible.getDescription()));
+                    }
                 } else {
                     Collection<Visible> visibles = player.getLocation().showTo(player);
                     if (visibles.isEmpty()){
