@@ -11,12 +11,16 @@ public class Actor extends Entity {
 
     private Scene location;
 
+    private boolean idle;
+
     public Actor() {
+        this.idle = true;
     }
 
     public Actor(String name, String description, Scene location) {
         super(name, description);
         this.location = location;
+        this.idle = true;
 
     }
 
@@ -46,6 +50,14 @@ public class Actor extends Entity {
 
     public synchronized boolean isAlive(){
         return health > 0;
+    }
+
+    public synchronized void setIdle(boolean idle){
+        this.idle = idle;
+    }
+
+    public synchronized boolean isIdle(){
+        return idle;
     }
 
 }

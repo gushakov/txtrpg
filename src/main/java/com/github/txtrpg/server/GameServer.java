@@ -15,6 +15,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author gushakov
@@ -60,12 +61,20 @@ public class GameServer {
         world = gameUnmarshaller.getWorld();
         npcController.setWorld(world);
         npcController.setNpcDictionary(gameUnmarshaller.getNpcDictionary());
-        daemonScheduler.scheduleAtFixedRate(new NpcActivateTask(actionProcessor, npcController), 500);
-        daemonScheduler.scheduleAtFixedRate(new NpcSpawnTask(actionProcessor, npcController), 1000);
-        daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
+        //daemonScheduler.scheduleAtFixedRate(new NpcActivateTask(actionProcessor, npcController), 500);
+        //daemonScheduler.scheduleAtFixedRate(new NpcSpawnTask(actionProcessor, npcController), 1000);
+        //daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
     }
 
     public void start() throws IOException, InterruptedException {
+
+        Executors.newSingleThreadExecutor()
+                .execute(new NpcActivateTask(actionProcessor, npcController));
+        Executors.newSingleThreadExecutor()
+                .execute(new NpcSpawnTask(actionProcessor, npcController));
+        Executors.newSingleThreadExecutor()
+                .execute(new DaemonTask(actionProcessor));
+
         new ServerTask(world, actionProcessor, commandsTaskExecutor).run();
     }
 

@@ -26,7 +26,6 @@ public class ProcessActionTask implements Runnable {
 
     @Override
     public void run() {
-        logger.debug("Processing action {}", action);
         actionProcessor.addActions(action.process());
     }
 

@@ -35,11 +35,23 @@ public class LookAction extends Action {
             if (actor instanceof Player) {
                 Player player = (Player) actor;
                 if (target != null) {
-                    player.sendMessage(target.getDescription());
+                    final StringBuilder builder = new StringBuilder(target.getDescription());
                     if (target instanceof Observable){
+                        builder.append(" Looking inside you find:");
                         ((Observable)target).showTo(player)
-                                .forEach(visible -> player.sendMessage(visible.getDescription()));
+                                .forEach(visible -> {
+                                    builder.appendCodePoint(10)
+                                            .appendCodePoint(9)
+                                            .append("#")
+                                            .append(visible.getName())
+                                    .append("#")
+                                    ;
+                                });
+
                     }
+
+                    player.sendMessage(builder.toString());
+
                 } else {
                     Collection<Visible> visibles = player.getLocation().showTo(player);
                     if (visibles.isEmpty()){

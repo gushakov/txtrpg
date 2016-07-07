@@ -29,4 +29,9 @@ public class Java8Test {
         Assert.assertTrue(dice.success());
 
     }
+
+    @Test
+    public void testCodePoint() throws Exception {
+        System.out.println("\n".codePointAt(0));
+    }
 }

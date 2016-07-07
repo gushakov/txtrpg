@@ -19,6 +19,14 @@ public class NpcSpawnTask implements Runnable {
 
     @Override
     public void run() {
+        while(true){
+
         actionProcessor.addActions(npcController.spawn());
+            try {
+                Thread.sleep(1000L);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

@@ -27,7 +27,15 @@ public class DaemonTask implements Runnable {
 
     @Override
     public void run() {
+        while (true){
+
         final LocalDateTime now = LocalDateTime.now();
         actionProcessor.processActions(now);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 }

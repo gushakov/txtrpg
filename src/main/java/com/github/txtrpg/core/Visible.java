@@ -5,5 +5,7 @@ package com.github.txtrpg.core;
  */
 public interface Visible {
 
-    public String getDescription();
+    String getDescription();
+
+    String getName();
 }

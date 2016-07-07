@@ -22,20 +22,16 @@ public abstract class Action {
 
     private LocalDateTime time;
 
-    private boolean started;
-
     public Action(ActionName name, Actor initiator) {
         this.name = name;
         this.initiator = initiator;
         this.time = LocalDateTime.now();
-        this.started = false;
     }
 
     public Action(ActionName name, Actor initiator, int delay) {
         this.name = name;
         this.initiator = initiator;
         this.time = LocalDateTime.now().plus((long) delay, ChronoUnit.SECONDS);
-        this.started = false;
     }
 
     public ActionName getName() {
@@ -50,28 +46,20 @@ public abstract class Action {
         return time;
     }
 
-    public boolean isStarted(){
-        synchronized (lock){
-            return started;
-        }
-    }
-
     public Collection<Action> process() {
-        synchronized (lock){
-            if (!started){
-                started = true;
-                List<Action> actions = new ArrayList<>();
-                Actor actor = getInitiator();
-                processForActor(actions, actor);
-                if (actor instanceof Player) {
-                    Player player = (Player) actor;
-                    processForPlayer(actions, player);
-                } else {
-                    processForNonPlayer(actions, actor);
-                }
-                return actions;
+        synchronized (lock) {
+            List<Action> actions = new ArrayList<>();
+            Actor actor = getInitiator();
+            actor.setIdle(false);
+            processForActor(actions, actor);
+            if (actor instanceof Player) {
+                Player player = (Player) actor;
+                processForPlayer(actions, player);
+            } else {
+                processForNonPlayer(actions, actor);
             }
-            return Collections.emptyList();
+            actor.setIdle(true);
+            return actions;
         }
     }
 
@@ -90,8 +78,6 @@ public abstract class Action {
                 name +
                 ": " +
                 initiator +
-                ", started: " +
-                started +
                 "]";
     }
 }
