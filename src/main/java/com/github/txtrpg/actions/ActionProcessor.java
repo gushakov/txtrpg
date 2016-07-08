@@ -7,8 +7,6 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -40,18 +38,29 @@ public class ActionProcessor {
         actionsQueue.addAll(actions);
     }
 
-    public void processActions(LocalDateTime clock) {
-        // start processing next action frame
-        boolean done = false;
-        while (!done && !actionsQueue.isEmpty()) {
+    public void processActions() {
+        while (true) {
+            if (actionsQueue.isEmpty()){
+                pause();
+                continue;
+            }
+            final LocalDateTime clock = LocalDateTime.now();
             Action action = actionsQueue.peek();
-            // consider action for processing only if it has not started already (from different task or thread)
-            if (!action.isStarted() && action.getTime().isBefore(clock)) {
+            // only process actions which are not delayed
+            if (action.getTime().isBefore(clock)) {
                 actionsTaskExecutor.submit(new ProcessActionTask(this, action));
                 actionsQueue.remove(action);
-            } else {
-                done = true;
             }
+            // done with this iteration, all other actions in the queue will be processed later
+            pause();
+        }
+    }
+
+    private void pause(){
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }

@@ -3,14 +3,13 @@ package com.github.txtrpg.server;
 import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.core.World;
 import com.github.txtrpg.json.GameUnmarshaller;
-import com.github.txtrpg.npc.NpcController;
+import com.github.txtrpg.logic.LogicController;
 import com.github.txtrpg.tasks.DaemonTask;
 import com.github.txtrpg.tasks.NpcActivateTask;
 import com.github.txtrpg.tasks.NpcSpawnTask;
 import com.github.txtrpg.tasks.ServerTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -29,11 +28,9 @@ public class GameServer {
 
     private ActionProcessor actionProcessor;
 
-    private ThreadPoolTaskScheduler daemonScheduler;
-
     private GameUnmarshaller gameUnmarshaller;
 
-    private NpcController npcController;
+    private LogicController logicController;
 
     public void setCommandsTaskExecutor(ExecutorService commandsTaskExecutor) {
         this.commandsTaskExecutor = commandsTaskExecutor;
@@ -43,35 +40,28 @@ public class GameServer {
         this.actionProcessor = actionProcessor;
     }
 
-    public void setDaemonScheduler(ThreadPoolTaskScheduler daemonScheduler) {
-        this.daemonScheduler = daemonScheduler;
-    }
-
     public void setGameUnmarshaller(GameUnmarshaller gameUnmarshaller) {
         this.gameUnmarshaller = gameUnmarshaller;
     }
 
-    public void setNpcController(NpcController npcController) {
-        this.npcController = npcController;
+    public void setLogicController(LogicController logicController) {
+        this.logicController = logicController;
     }
 
     @PostConstruct
     public void init() {
         gameUnmarshaller.unmarshal();
         world = gameUnmarshaller.getWorld();
-        npcController.setWorld(world);
-        npcController.setNpcDictionary(gameUnmarshaller.getNpcDictionary());
-        //daemonScheduler.scheduleAtFixedRate(new NpcActivateTask(actionProcessor, npcController), 500);
-        //daemonScheduler.scheduleAtFixedRate(new NpcSpawnTask(actionProcessor, npcController), 1000);
-        //daemonScheduler.scheduleAtFixedRate(new DaemonTask(actionProcessor), 500);
+        logicController.setWorld(world);
+        logicController.setNpcDictionary(gameUnmarshaller.getNpcDictionary());
     }
 
     public void start() throws IOException, InterruptedException {
 
         Executors.newSingleThreadExecutor()
-                .execute(new NpcActivateTask(actionProcessor, npcController));
+                .execute(new NpcActivateTask(actionProcessor, logicController));
         Executors.newSingleThreadExecutor()
-                .execute(new NpcSpawnTask(actionProcessor, npcController));
+                .execute(new NpcSpawnTask(actionProcessor, logicController));
         Executors.newSingleThreadExecutor()
                 .execute(new DaemonTask(actionProcessor));
 

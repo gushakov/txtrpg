@@ -2,14 +2,13 @@ package com.github.txtrpg.config;
 
 import com.github.txtrpg.actions.ActionProcessor;
 import com.github.txtrpg.json.GameUnmarshaller;
-import com.github.txtrpg.npc.NpcController;
+import com.github.txtrpg.logic.LogicController;
 import com.github.txtrpg.server.GameServer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import java.util.concurrent.ExecutorService;
 
@@ -45,13 +44,6 @@ public class AppConfig {
     }
 
     @Bean
-    public ThreadPoolTaskScheduler daemonScheduler() {
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(1);
-        return scheduler;
-    }
-
-    @Bean
     public ActionProcessor actionProcessor() {
         ActionProcessor processor = new ActionProcessor();
         processor.setActionsTaskExecutor(actionsTaskExecutor());
@@ -59,8 +51,8 @@ public class AppConfig {
     }
 
     @Bean
-    public NpcController npcController() {
-        return new NpcController();
+    public LogicController logicController() {
+        return new LogicController();
     }
 
     @Bean
@@ -76,9 +68,8 @@ public class AppConfig {
         GameServer server = new GameServer();
         server.setCommandsTaskExecutor(commandsTaskExecutor());
         server.setActionProcessor(actionProcessor());
-        server.setDaemonScheduler(daemonScheduler());
         server.setGameUnmarshaller(worldUnmarshaller());
-        server.setNpcController(npcController());
+        server.setLogicController(logicController());
         return server;
     }
 

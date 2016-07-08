@@ -22,9 +22,7 @@ public class DieAction extends Action {
     protected void processForNonPlayer(Collection<Action> actions, Actor actor) {
         if (actor instanceof Npc){
             Npc npc = (Npc) actor;
-            // remove npc from the scene
             Scene scene = npc.getLocation();
-            scene.getRoom().remove(npc);
             // add corpse to the ground
             scene.getGround().put(corpse);
         }

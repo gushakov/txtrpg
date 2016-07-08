@@ -1,15 +1,8 @@
 package com.github.txtrpg.tasks;
 
 import com.github.txtrpg.actions.ActionProcessor;
-import com.github.txtrpg.actions.ErrorAction;
-import com.github.txtrpg.actions.NoOpAction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.time.temporal.TemporalField;
-import java.util.Collections;
 
 /**
  * @author gushakov
@@ -27,15 +20,6 @@ public class DaemonTask implements Runnable {
 
     @Override
     public void run() {
-        while (true){
-
-        final LocalDateTime now = LocalDateTime.now();
-        actionProcessor.processActions(now);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        actionProcessor.processActions();
     }
 }

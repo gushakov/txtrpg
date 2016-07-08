@@ -7,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +49,6 @@ public abstract class Action {
         synchronized (lock) {
             List<Action> actions = new ArrayList<>();
             Actor actor = getInitiator();
-            actor.setIdle(false);
             processForActor(actions, actor);
             if (actor instanceof Player) {
                 Player player = (Player) actor;
@@ -58,7 +56,6 @@ public abstract class Action {
             } else {
                 processForNonPlayer(actions, actor);
             }
-            actor.setIdle(true);
             return actions;
         }
     }

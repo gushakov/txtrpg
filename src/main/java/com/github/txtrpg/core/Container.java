@@ -41,48 +41,70 @@ public class Container<T extends Item> extends Item implements Observable {
     }
 
     public Stream<T> stream() {
-        return items.stream();
+        synchronized (lock) {
+            return items.stream();
+        }
     }
 
     public void setItems(ConcurrentSkipListSet<T> entities) {
-        items.setEntities(entities);
+        synchronized (lock) {
+            items.setEntities(entities);
+        }
     }
 
-    public synchronized Optional<T> take(String name) {
-        return items.remove(name);
+    public Optional<T> take(String name) {
+        synchronized (lock) {
+            return items.remove(name);
+        }
     }
 
-    public synchronized boolean put(T item) {
-        return canFit(item) && items.add(item);
+    public boolean put(T item) {
+        synchronized (lock) {
+            return canFit(item) && items.add(item);
+        }
     }
 
-    public synchronized boolean canFit(Item item) {
-        return capacity >= getWeight() + item.getWeight();
+    public boolean canFit(Item item) {
+        synchronized (lock) {
+            return capacity >= getWeight() + item.getWeight();
+        }
     }
 
-    public synchronized boolean isEmpty() {
-        return items.isEmpty();
+    public boolean isEmpty() {
+        synchronized (lock) {
+            return items.isEmpty();
+        }
     }
 
-    public synchronized boolean isFull() {
-        return capacity > getWeight();
+    public boolean isFull() {
+        synchronized (lock) {
+            return capacity > getWeight();
+        }
     }
 
-    public synchronized List<T> find(String prefix) {
-        return items.find(prefix);
+    public List<T> find(String prefix) {
+        synchronized (lock) {
+            return items.find(prefix);
+        }
     }
 
     public int getCapacity() {
-        return capacity;
+        synchronized (lock) {
+            return capacity;
+        }
     }
 
     @Override
-    public synchronized int getWeight() {
-        return fixed ? emptyWeight : emptyWeight + items.stream().mapToInt(Item::getWeight).sum();
+    public int getWeight() {
+        synchronized (lock) {
+            return fixed ? emptyWeight : emptyWeight + items.stream().mapToInt(Item::getWeight).sum();
+        }
     }
 
     @Override
     public Collection<Visible> showTo(Actor actor) {
-        return items.stream().map(Visible.class::cast).collect(Collectors.toList());
+        synchronized (lock) {
+            return items.stream().map(Visible.class::cast).collect(Collectors.toList());
+        }
     }
 }

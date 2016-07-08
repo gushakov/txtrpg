@@ -10,6 +10,8 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 @NodeEntity
 public class Entity implements Visible, Comparable<Entity> {
 
+    protected final Object lock = new Object();
+
     @GraphId
     private Long id;
 

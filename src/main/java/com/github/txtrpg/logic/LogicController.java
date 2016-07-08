@@ -1,6 +1,8 @@
-package com.github.txtrpg.npc;
+package com.github.txtrpg.logic;
 
-import com.github.txtrpg.actions.*;
+import com.github.txtrpg.actions.Action;
+import com.github.txtrpg.actions.DieAction;
+import com.github.txtrpg.actions.SpawnAction;
 import com.github.txtrpg.core.*;
 import com.github.txtrpg.json.CorpseType;
 import com.github.txtrpg.json.NpcType;
@@ -8,15 +10,18 @@ import com.github.txtrpg.json.SpawnType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 /**
  * @author gushakov
  */
-public class NpcController {
+public class LogicController {
 
-    private static final Logger logger = LoggerFactory.getLogger(NpcController.class);
+    private static final Logger logger = LoggerFactory.getLogger(LogicController.class);
 
     private World world;
 
@@ -30,15 +35,11 @@ public class NpcController {
         this.npcDictionary = npcDictionary;
     }
 
-    public NpcType getNpcType(String name) {
-        return npcDictionary.get(name);
-    }
-
     public synchronized List<Action> spawn() {
         List<Action> actions = new ArrayList<>();
 
-        // count all npcs
-        final Map<String, Integer> npcsCount = getNpcsCount();
+        // count all alive npcs
+        final Map<String, Integer> npcsCount = getNpcsCount(true);
 
         // get all spawn locations
         npcDictionary.values().stream().forEach(type -> {
@@ -69,7 +70,11 @@ public class NpcController {
                 // TODO: implement
             }
             else {
-                // if npc is dead, create a corpse
+                // if npc is dead, remove from it from the scene directly
+                // to avoid creating a corpse twice by consecutive task executions
+                Scene scene = npc.getLocation();
+                scene.getRoom().remove(npc);
+                // create a die action with a corpse
                 final NpcType npcType = npcDictionary.get(npc.getName());
                 final CorpseType corpseType = npcType.getCorpse();
                 actions.add(new DieAction(npc, createCorpse(corpseType)));
@@ -92,15 +97,16 @@ public class NpcController {
        return world.getScenes().values().stream().map(Scene::getRoom).flatMap(Room::getNpcs);
     }
 
-    private Map<String, Integer> getNpcsCount() {
+    private Map<String, Integer> getNpcsCount(boolean alive) {
         final Map<String, Integer> map = new HashMap<>();
-
         getNpcs().forEach(npc -> {
-            Integer count = map.get(npc.getName());
-            if (count == null) {
-                map.put(npc.getName(), 1);
-            } else {
-                map.put(npc.getName(), count + 1);
+            if (alive && npc.isAlive()) {
+                Integer count = map.get(npc.getName());
+                if (count == null) {
+                    map.put(npc.getName(), 1);
+                } else {
+                    map.put(npc.getName(), count + 1);
+                }
             }
         });
 

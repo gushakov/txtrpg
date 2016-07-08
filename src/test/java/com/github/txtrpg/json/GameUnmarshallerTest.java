@@ -1,7 +1,7 @@
 package com.github.txtrpg.json;
 
 import com.github.txtrpg.core.*;
-import com.github.txtrpg.npc.NpcController;
+import com.github.txtrpg.logic.LogicController;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,8 +35,8 @@ public class GameUnmarshallerTest {
     public static class TestConfig {
 
         @Bean
-        public NpcController npcController() {
-            return new NpcController();
+        public LogicController npcController() {
+            return new LogicController();
         }
 
         @Bean
@@ -53,7 +53,7 @@ public class GameUnmarshallerTest {
     private GameUnmarshaller gameUnmarshaller;
 
     @Autowired
-    private NpcController npcController;
+    private LogicController logicController;
 
     @Test
     public void testContainer() throws Exception {

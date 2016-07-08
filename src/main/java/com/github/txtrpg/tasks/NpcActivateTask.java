@@ -1,7 +1,7 @@
 package com.github.txtrpg.tasks;
 
 import com.github.txtrpg.actions.ActionProcessor;
-import com.github.txtrpg.npc.NpcController;
+import com.github.txtrpg.logic.LogicController;
 
 /**
  * @author gushakov
@@ -10,18 +10,18 @@ public class NpcActivateTask implements Runnable {
 
     private ActionProcessor actionProcessor;
 
-    private NpcController npcController;
+    private LogicController logicController;
 
-    public NpcActivateTask(ActionProcessor actionProcessor, NpcController npcController) {
+    public NpcActivateTask(ActionProcessor actionProcessor, LogicController logicController) {
         this.actionProcessor = actionProcessor;
-        this.npcController = npcController;
+        this.logicController = logicController;
     }
 
     @Override
     public void run() {
         while(true){
 
-        actionProcessor.addActions(npcController.activate());
+            actionProcessor.addActions(logicController.activate());
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {

@@ -30,7 +30,7 @@ public class CollectionOfEntities<T extends Entity> {
         return entities.stream();
     }
 
-    public synchronized Optional<T> remove(String name) {
+    public Optional<T> remove(String name) {
         Optional<T> entity = entities.stream().filter(it -> it.getName().equals(name)).findFirst();
         if (entity.isPresent()) {
             entities.remove(entity.get());

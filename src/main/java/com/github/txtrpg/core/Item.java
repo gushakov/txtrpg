@@ -21,11 +21,15 @@ public class Item extends Entity {
     }
 
     public int getWeight() {
-        return weight;
+        synchronized (lock) {
+            return weight;
+        }
     }
 
     public void setWeight(int weight) {
-        this.weight = weight;
+        synchronized (lock) {
+            this.weight = weight;
+        }
     }
 
 }
