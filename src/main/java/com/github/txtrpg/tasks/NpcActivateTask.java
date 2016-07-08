@@ -20,7 +20,6 @@ public class NpcActivateTask implements Runnable {
     @Override
     public void run() {
         while(true){
-
             actionProcessor.addActions(logicController.activate());
             try {
                 Thread.sleep(500);

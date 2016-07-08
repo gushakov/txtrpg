@@ -20,7 +20,6 @@ public class NpcSpawnTask implements Runnable {
     @Override
     public void run() {
         while(true){
-
             actionProcessor.addActions(logicController.spawn());
             try {
                 Thread.sleep(1000L);
