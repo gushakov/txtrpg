@@ -19,11 +19,14 @@ public class Player extends Actor {
 
     private boolean quit;
 
+    private Bag bag;
+
     public Player(String name, String description, Scene location, Socket socket) {
         super(name, description, location);
         this.quit = false;
         this.getLocation().getRoom().add(this);
-        setHealth(new Dice(100).roll());
+        setHealth(70 + new Dice(30).roll());
+        bag = new Bag("bag of " + name, "A simple leather bag", 10);
         try {
             socketWriter = new PrintWriter(socket.getOutputStream(), true);
         } catch (IOException e) {
@@ -69,6 +72,10 @@ public class Player extends Actor {
         } else {
             socketWriter.flush();
         }
+    }
+
+    public synchronized Bag getBag(){
+        return bag;
     }
 
 }

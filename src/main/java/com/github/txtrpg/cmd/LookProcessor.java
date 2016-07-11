@@ -1,9 +1,6 @@
 package com.github.txtrpg.cmd;
 
-import com.github.txtrpg.actions.Action;
-import com.github.txtrpg.actions.DisambiguateAction;
-import com.github.txtrpg.actions.ErrorAction;
-import com.github.txtrpg.actions.LookAction;
+import com.github.txtrpg.actions.*;
 import com.github.txtrpg.antlr4.CommandParser;
 import com.github.txtrpg.core.Entity;
 import com.github.txtrpg.core.Player;
@@ -22,6 +19,25 @@ public class LookProcessor extends CommandProcessor {
     }
 
     @Override
+    protected List<Entity> getTargetCandidates(String prefix) {
+        List<Entity> candidates = new ArrayList<>();
+        final Scene location = player.getLocation();
+        candidates.addAll(location.getGround().find(prefix));
+        candidates.addAll(location.getRoom().getOtherMatchingActors(player, prefix).collect(Collectors.toList()));
+        return candidates;
+    }
+
+    @Override
+    protected List<Entity> getTargetCandidates(String prefix, Entity contextEntity) {
+        throw new IllegalStateException();
+    }
+
+    @Override
+    protected List<Entity> getContextCandidates(String prefix) {
+        throw new IllegalStateException();
+    }
+
+    @Override
     protected Action doProcess(Player player) {
         return new LookAction(player);
     }
@@ -29,6 +45,11 @@ public class LookProcessor extends CommandProcessor {
     @Override
     protected Action doProcess(Player player, Entity targetEntity) {
         return new LookAction(player, targetEntity);
+    }
+
+    @Override
+    protected Action doProcess(Player player, Entity targetEntity, Entity contextEntity) {
+        return new NoOpAction(player);
     }
 
 }

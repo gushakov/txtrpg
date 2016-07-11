@@ -40,6 +40,14 @@ public class Container<T extends Item> extends Item implements Observable {
         this.items = new CollectionOfEntities<>();
     }
 
+    public Container(String name, String description, int emptyWeight, int capacity) {
+        super(name, description, emptyWeight);
+        this.fixed = false;
+        this.emptyWeight = emptyWeight;
+        this.capacity = capacity;
+        this.items = new CollectionOfEntities<>();
+    }
+
     public Stream<T> stream() {
         synchronized (lock) {
             return items.stream();
@@ -55,6 +63,12 @@ public class Container<T extends Item> extends Item implements Observable {
     public Optional<T> take(String name) {
         synchronized (lock) {
             return items.remove(name);
+        }
+    }
+
+    public void take(T item){
+        synchronized (lock){
+            items.remove(item);
         }
     }
 

@@ -38,6 +38,10 @@ public class CollectionOfEntities<T extends Entity> {
         return entity;
     }
 
+    public void remove(T entity){
+        entities.remove(entity);
+    }
+
     public synchronized boolean add(T entity) {
         return entities.add(entity);
     }
