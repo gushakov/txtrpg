@@ -30,34 +30,24 @@ public class LookAction extends Action {
 
     @Override
     public Collection<Action> process() {
-        synchronized (lock){
+        synchronized (lock) {
             Actor actor = getInitiator();
             if (actor instanceof Player) {
                 Player player = (Player) actor;
                 if (target != null) {
                     final StringBuilder builder = new StringBuilder(target.getDescription());
-                    if (target instanceof Observable){
+                    if (target instanceof Observable) {
                         builder.append(" Looking inside you find:");
-                        ((Observable)target).showTo(player)
-                                .forEach(visible -> {
-                                    builder.appendCodePoint(10)
-                                            .appendCodePoint(9)
-                                            .append("#")
-                                            .append(visible.getName())
-                                    .append("#")
-                                    ;
-                                });
-
+                        ((Observable) target).showTo(player)
+                                .forEach(visible -> builder.appendCodePoint(10)
+                                        .append(">... ").append(visible.getName()));
                     }
-
                     player.sendMessage(builder.toString());
-
                 } else {
-                    Collection<Visible> visibles = player.getLocation().showTo(player);
-                    if (visibles.isEmpty()){
+                    final Collection<Visible> visibles = player.getLocation().showTo(player);
+                    if (visibles.isEmpty()) {
                         player.sendMessage(player.getLocation().getDescription());
-                    }
-                    else {
+                    } else {
                         player.sendMessage(player.getLocation().getDescription(), true, false);
                         visibles.stream()
                                 .forEach(v -> player.sendMessage(v.getDescription()));

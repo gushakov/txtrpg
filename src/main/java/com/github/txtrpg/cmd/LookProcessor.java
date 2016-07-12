@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 /**
  * @author gushakov
  */
-public class LookProcessor extends CommandProcessor {
+public class LookProcessor extends CommandProcessorAdapter {
     public LookProcessor(CommandParser parser, Player player) {
         super(parser, player);
     }
@@ -28,16 +28,6 @@ public class LookProcessor extends CommandProcessor {
     }
 
     @Override
-    protected List<Entity> getTargetCandidates(String prefix, Entity contextEntity) {
-        throw new IllegalStateException();
-    }
-
-    @Override
-    protected List<Entity> getContextCandidates(String prefix) {
-        throw new IllegalStateException();
-    }
-
-    @Override
     protected Action doProcess(Player player) {
         return new LookAction(player);
     }
@@ -45,11 +35,6 @@ public class LookProcessor extends CommandProcessor {
     @Override
     protected Action doProcess(Player player, Entity targetEntity) {
         return new LookAction(player, targetEntity);
-    }
-
-    @Override
-    protected Action doProcess(Player player, Entity targetEntity, Entity contextEntity) {
-        return new NoOpAction(player);
     }
 
 }

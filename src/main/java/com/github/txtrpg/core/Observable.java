@@ -7,6 +7,6 @@ import java.util.Collection;
  */
 public interface Observable {
 
-    public Collection<Visible> showTo(Actor actor);
+    Collection<Visible> showTo(Actor actor);
 
 }

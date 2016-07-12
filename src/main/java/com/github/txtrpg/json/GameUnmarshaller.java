@@ -10,6 +10,7 @@ import org.springframework.util.Assert;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -28,7 +29,7 @@ public class GameUnmarshaller {
 
     private World world;
 
-    private  Map<String, NpcType> npcDictionary;
+    private Map<String, NpcType> npcDictionary;
 
     public void setScenesFileResource(Resource scenesFileResource) {
         this.scenesFileResource = scenesFileResource;
@@ -54,34 +55,46 @@ public class GameUnmarshaller {
         ObjectMapper mapper = new ObjectMapper();
         try {
             // load scenes from json
-            ArrayList<Scene> jsonScenes = mapper.readValue(scenesFileResource.getInputStream(),
-                    new TypeReference<List<Scene>>() {
+            final ArrayList<SceneType> jsonScenes = mapper.readValue(scenesFileResource.getInputStream(),
+                    new TypeReference<List<SceneType>>() {
                     }
             );
 
-            Map<String, Scene> scenesMap = jsonScenes.stream()
-                    .collect(Collectors.toMap(Scene::getName, Function.identity()));
+            final Map<String, Scene> scenesMap = new HashMap<>();
 
-            for (Scene scene : scenesMap.values()) {
-                // create a ground container, if needed
-                if (scene.getGround() == null) {
-                    scene.setGround(new Ground());
+            jsonScenes.stream().forEach(sceneType -> {
+                final Scene scene = new Scene(sceneType.getName(), sceneType.getDescription());
+
+                final ItemType groundType = sceneType.getGround();
+                if (groundType != null) {
+                    final Ground ground = new Ground();
+                    groundType.getItems().forEach(itemType -> {
+                        if (itemType.getItems() != null) {
+                            final Container<Item> container = new Container<>(itemType.getName(), itemType.getDescription());
+                            itemType.getItems().forEach(itType -> {
+                                container.put(new Item(itType.getName(), itType.getDescription(), itType.getWeight()));
+                            });
+                            ground.put(container);
+                        } else {
+                            ground.put(new Item(itemType.getName(), itemType.getDescription(), itemType.getWeight()));
+                        }
+                    });
+                    scene.setGround(ground);
                 }
 
-                // for each exit in every scene update a "from" scene and the "to" to point to the
-                // actual scenes from the map
-                for (Exit exit : scene.getExits()) {
-                    exit.setFrom(scene);
-                    exit.setTo(scenesMap.get(exit.getTo().getName()));
-                }
                 scenesMap.put(scene.getName(), scene);
-            }
+            });
+
+            jsonScenes.stream().forEach(sceneType -> {
+                final Scene scene = scenesMap.get(sceneType.getName());
+                sceneType.getExits().forEach(exitType -> scene.addExit(Dir.valueOf(exitType.getDir()), scenesMap.get(exitType.getTo())));
+            });
 
             world.setScenes(scenesMap);
 
             // load NPC types from json
 
-            ArrayList<NpcType> jsonNpcs = mapper.readValue(npcFileResource.getInputStream(),
+            final ArrayList<NpcType> jsonNpcs = mapper.readValue(npcFileResource.getInputStream(),
                     new TypeReference<List<NpcType>>() {
                     });
 

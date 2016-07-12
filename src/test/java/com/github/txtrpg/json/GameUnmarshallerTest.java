@@ -52,23 +52,15 @@ public class GameUnmarshallerTest {
     @Autowired
     private GameUnmarshaller gameUnmarshaller;
 
-    @Autowired
-    private LogicController logicController;
-
     @Test
     public void testContainer() throws Exception {
-        Container<Item> chest = new Container<>("chest1", "big wooden chest");
-        assertThat(chest.isEmpty(), is(true));
-        chest.put(new Item("a little bottle", "a little bottle", 1));
-        chest.put(new Item("copper coin", "copper coin"));
-        chest.put(new Item("silver coin", "silver coin"));
-        chest.put(new Item("small gold coin", "small gold coin"));
-        assertThat(chest.getWeight(), is(Integer.MAX_VALUE));
-        Container<Item> bag = new Container<>("bag1", "leather bag", 1);
-        assertThat(bag.getWeight(), is(1));
-        chest.put(bag);
-        assertThat(chest.find("bottle"), iterableWithSize(1));
-        assertThat(chest.find("coin"), iterableWithSize(3));
+        Container<Item> bag = new Container<>("bag1", "leather bag", false, 10);
+        assertThat(bag.getWeight(), is(0));
+        bag.put(new Item("a little bottle", "a little bottle", 2));
+        bag.put(new Item("copper coin", "copper coin", 1));
+        bag.put(new Item("silver coin", "silver coin", 1));
+        bag.put(new Item("small gold coin", "small gold coin", 1));
+        assertThat(bag.getWeight(), is(5));
     }
 
     @Test

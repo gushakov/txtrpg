@@ -6,6 +6,6 @@ package com.github.txtrpg.core;
 public class Bag extends Container<Item> {
 
     public Bag(String name, String description, int capacity) {
-        super(name, description, 0, capacity);
+        super(name, description, false, capacity);
     }
 }

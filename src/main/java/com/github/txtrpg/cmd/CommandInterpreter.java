@@ -66,6 +66,12 @@ public class CommandInterpreter extends CommandBaseListener {
     }
 
     @Override
+    public void enterDrop(@NotNull CommandParser.DropContext ctx) {
+        actionProcessor.addAction(new DropProcessor(parser, player).process());
+        super.enterDrop(ctx);
+    }
+
+    @Override
     public void exitEveryRule(@NotNull ParserRuleContext ctx) {
         parser.resetParams();
         super.exitEveryRule(ctx);

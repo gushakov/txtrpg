@@ -16,8 +16,6 @@ public class Container<T extends Item> extends Item implements Observable {
 
     private boolean fixed;
 
-    private int emptyWeight;
-
     private int capacity;
 
     public Container() {
@@ -27,23 +25,13 @@ public class Container<T extends Item> extends Item implements Observable {
     public Container(String name, String description) {
         super(name, description);
         this.fixed = true;
-        this.emptyWeight = Integer.MAX_VALUE;
         this.capacity = Integer.MAX_VALUE;
         this.items = new CollectionOfEntities<>();
     }
 
-    public Container(String name, String description, int emptyWeight) {
-        super(name, description, emptyWeight);
-        this.fixed = false;
-        this.emptyWeight = emptyWeight;
-        this.capacity = Integer.MAX_VALUE;
-        this.items = new CollectionOfEntities<>();
-    }
-
-    public Container(String name, String description, int emptyWeight, int capacity) {
-        super(name, description, emptyWeight);
-        this.fixed = false;
-        this.emptyWeight = emptyWeight;
+    public Container(String name, String description, boolean fixed, int capacity) {
+        super(name, description);
+        this.fixed = fixed;
         this.capacity = capacity;
         this.items = new CollectionOfEntities<>();
     }
@@ -111,7 +99,7 @@ public class Container<T extends Item> extends Item implements Observable {
     @Override
     public int getWeight() {
         synchronized (lock) {
-            return fixed ? emptyWeight : emptyWeight + items.stream().mapToInt(Item::getWeight).sum();
+            return fixed ? Integer.MAX_VALUE : items.stream().mapToInt(Item::getWeight).sum();
         }
     }
 

@@ -22,7 +22,7 @@ public class CombatAction extends Action {
     protected void processForPlayer(Collection<Action> actions, Player player) {
         int roll = new Dice(3).roll();
         target.decreaseHealth(roll);
-        player.sendMessage("You *attack* #" +
+        player.sendMessage("You attack #" +
                 target.getName() +
                 "# causing +" +
                 roll +
@@ -30,7 +30,7 @@ public class CombatAction extends Action {
         if (!target.isAlive()){
             player.sendMessage("#" +
                     target.getName() +
-                    "# is +dead+.");
+                    "# is dead.");
         }
     }
 }

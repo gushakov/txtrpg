@@ -1,63 +1,76 @@
 [
-    {
-        "name": "s1",
-        "description": "You find yourself in a midst of a dark and dense forest. Branches form a thick canopy overhead.\n\rA a narrow footpath winds itself through the trees to the north.",
-        "exits": [
-            {
-                "dir": "n",
-                "to": {
-                    "name": "s2"
-                }
-            }
-        ],
-        "ground": {
-            "items": [
-                {
-                    "name": "silver coin",
-                    "description": "You notice a small _silver coin_ is glistening on the side of the road.",
-                    "weight": 0
-                },
-                {
-                    "name": "old copper coin",
-                    "description": "Somebody lost an old _copper coin_ here.",
-                    "weight": 0
-                },
-                {
-                    "name": "gold coin",
-                    "description": "You catch a sight of a shiny _gold coin_ laying on the ground.",
-                    "weight": 0
-                }
-            ]
+  {
+    "name": "s1",
+    "description": "You find yourself in a midst of a dark and dense forest. Branches form a thick canopy overhead.\n\rA a narrow footpath winds itself through the trees to the north.",
+    "exits": [
+      {
+        "dir": "n",
+        "to": "s2"
+      }
+    ],
+    "ground": {
+      "items": [
+        {
+          "name": "silver coin",
+          "description": "You notice a small _silver coin_ is glistening on the side of the road.",
+          "weight": 0
+        },
+        {
+          "name": "old copper coin",
+          "description": "Somebody lost an old _copper coin_ here.",
+          "weight": 0
+        },
+        {
+          "name": "gold coin",
+          "description": "You catch a sight of a shiny _gold coin_ laying on the ground.",
+          "weight": 0
         }
-    },
-    {
-        "name": "s2",
-        "description": "An oak tree in the forest.",
-        "exits": [
+      ]
+    }
+  },
+  {
+    "name": "s2",
+    "description": "An oak tree in the forest. Some oddities are laying around the trunk of the ancient tree.",
+    "exits": [
+      {
+        "dir": "n",
+        "to": "s3"
+      },
+      {
+        "dir": "s",
+        "to": "s1"
+      }
+    ],
+    "ground": {
+      "items": [
+        {
+          "name": "wooden chest",
+          "description": "An old _oak chest_ with a cast iron handles.",
+          "weight": 100,
+          "items": [
             {
-                "dir": "n",
-                "to": {
-                    "name": "s3"
-                }
+              "name": "iron dagger",
+              "description": "Simple iron dagger. A bit old, but looks trustworthy enough.",
+              "weight": 5
             },
             {
-                "dir": "s",
-                "to": {
-                    "name": "s1"
-                }
+              "name": "small potion",
+              "description": "An odd-shaped glass flask with a reddish liquor inside.",
+              "weight": 1
             }
-        ]
-    },
-    {
-        "name": "s3",
-        "description": "A meadow.",
-        "exits": [
-            {
-                "dir": "s",
-                "to": {
-                    "name": "s2"
-                }
-            }
-        ]
+          ]
+        }
+      ]
     }
+  },
+  {
+    "name": "s3",
+    "description": "A meadow.",
+    "exits": [
+      {
+        "dir": "s",
+        "to": "s2"
+      }
+    ]
+  }
 ]

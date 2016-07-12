@@ -79,24 +79,24 @@ public class Scene extends Entity implements Observable {
 
     @Override
     public String getDescription() {
-        final StringBuilder buffer = new StringBuilder(super.getDescription());
+        final StringBuilder builder = new StringBuilder(super.getDescription());
         ground.stream().forEach(it -> {
-            buffer.append("\n\r")
+            builder.append("\n\r")
                     .append(it.getDescription());
         });
         exits.stream().forEach(e -> {
-            buffer.append("\n\r")
+            builder.append("\n\r")
                     .append("*")
                     .append(e.getDir().getDirection())
                     .append("*: to ")
                     .append(e.getTo().getName());
         });
-        return buffer.toString();
+        return builder.toString();
     }
 
     @Override
     public Collection<Visible> showTo(Actor actor) {
-        List<Visible> visibles = new ArrayList<>();
+        final List<Visible> visibles = new ArrayList<>();
         room.stream().filter(a -> !a.getName().equals(actor.getName())).forEach(visibles::add);
         return visibles;
     }

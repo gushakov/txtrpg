@@ -2,7 +2,6 @@ package com.github.txtrpg.cmd;
 
 import com.github.txtrpg.actions.Action;
 import com.github.txtrpg.actions.ErrorAction;
-import com.github.txtrpg.actions.NoOpAction;
 import com.github.txtrpg.actions.TakeAction;
 import com.github.txtrpg.antlr4.CommandParser;
 import com.github.txtrpg.core.*;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * @author gushakov
  */
-public class TakeProcessor extends CommandProcessor {
+public class TakeProcessor extends CommandProcessorAdapter {
     public TakeProcessor(CommandParser parser, Player player) {
         super(parser, player);
     }

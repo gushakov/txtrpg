@@ -4,24 +4,22 @@ import com.github.txtrpg.actions.*;
 import com.github.txtrpg.antlr4.CommandParser;
 import com.github.txtrpg.core.Entity;
 import com.github.txtrpg.core.Player;
-import com.github.txtrpg.core.Scene;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * @author gushakov
  */
-public abstract class CommandProcessor {
+public abstract class AbstractCommandProcessor {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommandProcessor.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractCommandProcessor.class);
     protected CommandParser parser;
     protected Player player;
 
-    public CommandProcessor(CommandParser parser, Player player) {
+    public AbstractCommandProcessor(CommandParser parser, Player player) {
         this.parser = parser;
         this.player = player;
     }
