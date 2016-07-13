@@ -48,13 +48,13 @@ public class Container<T extends Item> extends Item implements Observable {
         }
     }
 
-    public Optional<T> take(String name) {
+    public Optional<T> remove(String name) {
         synchronized (lock) {
             return items.remove(name);
         }
     }
 
-    public void take(T item){
+    public void remove(T item){
         synchronized (lock){
             items.remove(item);
         }

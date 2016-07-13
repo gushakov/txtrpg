@@ -1,7 +1,10 @@
 package com.github.txtrpg.cmd;
 
+import com.github.txtrpg.actions.Action;
+import com.github.txtrpg.actions.DropAction;
 import com.github.txtrpg.antlr4.CommandParser;
 import com.github.txtrpg.core.Entity;
+import com.github.txtrpg.core.Item;
 import com.github.txtrpg.core.Player;
 
 import java.util.List;
@@ -18,6 +21,12 @@ public class DropProcessor extends CommandProcessorAdapter {
 
     @Override
     protected List<Entity> getTargetCandidates(String prefix) {
-        return player.getBag().stream().collect(Collectors.toList());
+        return player.getBag().find(prefix).stream()
+                .map(Entity.class::cast).collect(Collectors.toList());
+    }
+
+    @Override
+    protected Action doProcess(Player player, Entity targetEntity) {
+        return new DropAction(player, (Item) targetEntity);
     }
 }

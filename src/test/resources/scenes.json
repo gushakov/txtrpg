@@ -50,12 +50,12 @@
           "items": [
             {
               "name": "iron dagger",
-              "description": "Simple iron dagger. A bit old, but looks trustworthy enough.",
+              "description": "Simple _iron dagger_. A bit old, but looks trustworthy enough.",
               "weight": 5
             },
             {
               "name": "small potion",
-              "description": "An odd-shaped glass flask with a reddish liquor inside.",
+              "description": "An odd-shaped glass flask with a reddish _potion_ inside.",
               "weight": 1
             }
           ]

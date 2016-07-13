@@ -30,14 +30,14 @@ public class TakeAction extends Action {
     @Override
     protected void processForPlayer(Collection<Action> actions, Player player) {
         if (container == null){
-            player.getLocation().getGround().take(item);
+            player.getLocation().getGround().remove(item);
             player.getBag().put(item);
             player.sendMessage("You pick up _" + item.getName() + "_ from the ground.");
         }
         else {
-            container.take(item);
+            container.remove(item);
             player.getBag().put(item);
-            player.sendMessage("You take _" + item.getName() + "_ from #" + container + "#.");
+            player.sendMessage("You take _" + item.getName() + "_ from " + container.getName() + ".");
         }
     }
 }

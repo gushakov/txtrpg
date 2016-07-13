@@ -43,7 +43,7 @@ public class Entity implements Visible, Comparable<Entity> {
 
     @Override
     public String getDescription() {
-        return description;
+        return description + " [" + uuid + "]";
     }
 
     @Override

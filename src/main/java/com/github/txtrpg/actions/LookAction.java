@@ -39,8 +39,7 @@ public class LookAction extends Action {
                     if (target instanceof Observable) {
                         builder.append(" Looking inside you find:");
                         ((Observable) target).showTo(player)
-                                .forEach(visible -> builder.appendCodePoint(10)
-                                        .append(">... ").append(visible.getName()));
+                                .forEach(visible -> builder.append("\n\r> ").append(visible.getName()));
                     }
                     player.sendMessage(builder.toString());
                 } else {

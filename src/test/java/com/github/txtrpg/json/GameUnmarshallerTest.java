@@ -81,7 +81,7 @@ public class GameUnmarshallerTest {
         assertThat(s1.getGround().find("copper"), iterableWithSize(1));
         assertThat(s1.getGround().find("gold"), iterableWithSize(1));
 
-        Optional<Item> coin1 = s1.getGround().take("silver coin");
+        Optional<Item> coin1 = s1.getGround().remove("silver coin");
         assertThat(coin1.isPresent(), is(true));
         assertThat(coin1.get(), hasProperty("name", is("silver coin")));
     }
