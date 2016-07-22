@@ -21,15 +21,20 @@ public class DropAction extends Action {
     public DropAction(Actor initiator, Item item) {
         super(ActionName.drop, initiator);
         Assert.notNull(item);
+        item.lock();
         this.item = item;
     }
 
     @Override
     protected void processForPlayer(Collection<Action> actions, Player player) {
         if (item != null){
-            player.getBag().remove(item);
-            player.getLocation().getGround().put(item);
-            player.sendMessage("You dropped _" + item + "_ to the ground.");
+            try {
+                player.getBag().remove(item);
+                player.getLocation().getGround().put(item);
+                player.sendMessage("You dropped _" + item + "_ to the ground.");
+            } finally {
+                item.unlock();
+            }
         }
         else {
             player.sendMessage("Drop -what-?");

@@ -86,7 +86,8 @@ public class Container<T extends Item> extends Item implements Observable {
 
     public List<T> find(String prefix) {
         synchronized (lock) {
-            return items.find(prefix);
+            final List<T> list = items.find(prefix);
+            return list;
         }
     }
 

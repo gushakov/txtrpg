@@ -18,26 +18,32 @@ public class TakeAction extends Action {
 
     public TakeAction(Actor initiator, Item item) {
         super(ActionName.take, initiator);
+        item.lock();
         this.item = item;
     }
 
     public TakeAction(Actor initiator, Item item, Container<Item> container) {
         super(ActionName.take, initiator);
+        item.lock();
         this.item = item;
         this.container = container;
     }
 
     @Override
     protected void processForPlayer(Collection<Action> actions, Player player) {
-        if (container == null){
-            player.getLocation().getGround().remove(item);
-            player.getBag().put(item);
-            player.sendMessage("You pick up _" + item.getName() + "_ from the ground.");
-        }
-        else {
-            container.remove(item);
-            player.getBag().put(item);
-            player.sendMessage("You take _" + item.getName() + "_ from " + container.getName() + ".");
+        try {
+            if (container == null){
+                player.getLocation().getGround().remove(item);
+                player.getBag().put(item);
+                player.sendMessage("You pick up _" + item.getName() + "_ from the ground.");
+            }
+            else {
+                container.remove(item);
+                player.getBag().put(item);
+                player.sendMessage("You take _" + item.getName() + "_ from " + container.getName() + ".");
+            }
+        } finally {
+            item.unlock();
         }
     }
 }
