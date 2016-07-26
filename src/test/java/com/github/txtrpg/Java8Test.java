@@ -3,6 +3,7 @@ package com.github.txtrpg;
 import com.github.txtrpg.core.Dice;
 import com.github.txtrpg.core.Entity;
 import com.github.txtrpg.core.Item;
+import com.github.txtrpg.utils.ConsoleUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,4 +35,17 @@ public class Java8Test {
     public void testCodePoint() throws Exception {
         System.out.println("\n".codePointAt(0));
     }
+
+    @Test
+    public void testStringFormatter() throws Exception {
+//        System.out.println(ConsoleUtils.color("#toto#"));
+//        System.out.println(ConsoleUtils.color("~toto~"));
+//        System.out.println(ConsoleUtils.color("*toto*"));
+//        System.out.println(ConsoleUtils.color("_toto_"));
+
+        System.out.println(String.format("%-30.30s%-30.30s", "toto", 3));
+        System.out.println(String.format("%-30.30s%-30.30s", "foobar", 5));
+
+    }
+
 }

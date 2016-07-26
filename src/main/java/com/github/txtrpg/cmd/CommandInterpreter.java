@@ -72,6 +72,12 @@ public class CommandInterpreter extends CommandBaseListener {
     }
 
     @Override
+    public void enterBag(@NotNull CommandParser.BagContext ctx) {
+        actionProcessor.addAction(new BagProcessor(parser, player).process());
+        super.enterBag(ctx);
+    }
+
+    @Override
     public void exitEveryRule(@NotNull ParserRuleContext ctx) {
         parser.resetParams();
         super.exitEveryRule(ctx);

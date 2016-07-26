@@ -14,6 +14,7 @@ public enum ActionName {
     combat,
     take,
     drop,
+    bag,
     die,
     quit,
     error,

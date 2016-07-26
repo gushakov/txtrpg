@@ -50,6 +50,7 @@ command : move EOF
     | attack EOF
     | take ( from )? EOF
     | drop EOF
+    | bag EOF
     | quit EOF
     ;
 
@@ -82,6 +83,9 @@ from : 'from' WORD { param3 = $WORD.text; variant = 4;}
 drop : 'drop' {variant = 1;}
     | 'drop' WORD { param1 = $WORD.text; variant = 2; }
     | 'drop' WORD NUMBER { param1 = $WORD.text; param2 = $NUMBER.text; variant = 3; }
+    ;
+
+bag : 'bag' {variant = 1;}
     ;
 
 quit : 'quit' | 'exit';
