@@ -3,9 +3,13 @@ package com.github.txtrpg.actions;
 import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Entity;
 import com.github.txtrpg.core.Player;
+import com.github.txtrpg.message.Color;
+import com.github.txtrpg.message.ColumnLayout;
+import com.github.txtrpg.message.MessageBuilder;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * @author gushakov
@@ -25,11 +29,20 @@ public class DisambiguateAction extends Action {
 
     @Override
     protected void processForPlayer(Collection<Action> actions, Player player) {
-        player.sendMessage("There are several of those here:", false, false);
+        final MessageBuilder builder = new MessageBuilder()
+                .append("There are several of those here:")
+                .withColumns(ColumnLayout.list);
+
         for (int i = 0; i < candidates.size(); i++) {
-            player.sendMessage("#" + (i + 1) + "#: " + candidates.get(i).getName(), true, false);
+             builder.append(i + 1, Color.cyan).append(":")
+                .tab()
+                .append(candidates.get(i).getName())
+                .tab()
+             ;
         }
-        player.updateStatus();
+        builder.end();
+
+        player.sendMessage(builder.toString(), true, true);
     }
 
 }

@@ -1,51 +1,90 @@
 package com.github.txtrpg.message;
 
+import java.util.Arrays;
+
 /**
+ *
  * @author gushakov
  */
 public class MessageBuilder {
 
-    enum Color {
-        yellow("\u001B[1;33m");
+    private final String EOL = "\n\r";
+    private String buffer;
 
-        private String prefix;
-
-
-        Color(String prefix) {
-            this.prefix = prefix;
-        }
-
-        public String escape(String text){
-          return prefix + text + "\u001B[0m";
-        }
-    }
-
-    private StringBuilder builder;
-
-    public static Color yellow(){
-        return Color.yellow;
-    }
+    private boolean tabMode;
+    private ColumnLayout columnLayout;
+    private String[] columns;
+    private int columnIndex;
 
     public MessageBuilder() {
-        builder = new StringBuilder();
+        this.buffer = "";
     }
 
-    public MessageBuilder(String text) {
-        builder = new StringBuilder(text);
+    public MessageBuilder append(String text) {
+        if (tabMode) {
+            columns[columnIndex] += text;
+        } else {
+            buffer += text;
+        }
+        return this;
+    }
+
+    public MessageBuilder append(int number){
+        append(Integer.toString(number));
+        return this;
+    }
+
+    public MessageBuilder append(int number, Color color){
+        append(Integer.toString(number), color);
+        return this;
+    }
+
+    public MessageBuilder append(String text, Color color) {
+        append(color.escape(text));
+        return this;
     }
 
     public MessageBuilder br() {
-        builder.append("\n\r");
+        append(EOL);
         return this;
     }
 
-    public MessageBuilder append(Color color, String text){
-        builder.append(color.escape(text));
+    public MessageBuilder withColumns(ColumnLayout layout) {
+        this.columnLayout = layout;
+        tabMode = true;
+        buffer += EOL;
+        resetColumns();
         return this;
     }
 
-    public String build(){
-        return builder.toString();
+    public MessageBuilder tab() {
+        columnIndex++;
+        if (columnIndex == columnLayout.getNumOfColumns()) {
+            outputRow();
+            resetColumns();
+        }
+        return this;
+    }
+
+    public MessageBuilder end() {
+        outputRow();
+        tabMode = false;
+        return this;
+    }
+
+    @Override
+    public String toString() {
+        return buffer;
+    }
+
+    private void resetColumns() {
+        columns = new String[columnLayout.getNumOfColumns()];
+        Arrays.fill(columns, "");
+        columnIndex = 0;
+    }
+
+    private void outputRow() {
+        buffer += String.format(columnLayout.getTemplate(), columns) + EOL;
     }
 
 }
