@@ -3,6 +3,8 @@ package com.github.txtrpg.actions;
 import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Dice;
 import com.github.txtrpg.core.Player;
+import com.github.txtrpg.message.Color;
+import com.github.txtrpg.message.MessageBuilder;
 
 import java.util.Collection;
 
@@ -22,15 +24,15 @@ public class CombatAction extends Action {
     protected void processForPlayer(Collection<Action> actions, Player player) {
         int roll = new Dice(3).roll();
         target.decreaseHealth(roll);
-        player.sendMessage("You attack #" +
-                target.getName() +
-                "# causing +" +
-                roll +
-                "+ of damage.");
-        if (!target.isAlive()){
-            player.sendMessage("#" +
-                    target.getName() +
-                    "# is dead.");
+        final MessageBuilder messageBuilder = new MessageBuilder();
+        messageBuilder.append("You attack ")
+                .append(target.getName(), Color.cyan)
+                .append(" causing ")
+                .append(roll, Color.green)
+                .append(" of damage");
+        if (!target.isAlive()) {
+            messageBuilder.br().append(target.getName(), Color.cyan).append(" is dead.");
         }
+        player.sendMessage(messageBuilder.toString());
     }
 }

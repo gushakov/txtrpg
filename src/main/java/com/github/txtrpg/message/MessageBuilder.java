@@ -1,6 +1,7 @@
 package com.github.txtrpg.message;
 
 import java.util.Arrays;
+import java.util.StringTokenizer;
 
 /**
  *
@@ -20,6 +21,10 @@ public class MessageBuilder {
         this.buffer = "";
     }
 
+    public MessageBuilder(String text){
+        this.buffer = text;
+    }
+
     public MessageBuilder append(String text) {
         if (tabMode) {
             columns[columnIndex] += text;
@@ -27,6 +32,10 @@ public class MessageBuilder {
             buffer += text;
         }
         return this;
+    }
+
+    public void reset(){
+        buffer = "";
     }
 
     public MessageBuilder append(int number){
@@ -69,6 +78,30 @@ public class MessageBuilder {
     public MessageBuilder end() {
         outputRow();
         tabMode = false;
+        return this;
+    }
+
+    public MessageBuilder parse(String text) {
+        final StringTokenizer tokenizer = new StringTokenizer(text, Color.getAllDelimiters(), true);
+        boolean startColor = false;
+        Color tokenColor = null;
+        while (tokenizer.hasMoreTokens()) {
+            final String token = tokenizer.nextToken();
+            if (Color.isDelimiter(token)){
+                tokenColor = Color.forDelimiter(token);
+                // toggle start color
+                startColor = !startColor;
+                continue;
+            }
+
+            // append token with current color if any
+            if (startColor){
+                append(token, tokenColor);
+            }
+            else {
+                append(token);
+            }
+        }
         return this;
     }
 

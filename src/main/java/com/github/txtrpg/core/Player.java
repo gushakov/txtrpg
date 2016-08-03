@@ -1,6 +1,7 @@
 package com.github.txtrpg.core;
 
-import com.github.txtrpg.utils.ConsoleUtils;
+import com.github.txtrpg.message.Color;
+import com.github.txtrpg.message.MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,24 +50,24 @@ public class Player extends Actor {
     }
 
     public void updateStatus() {
-        socketWriter.write(ConsoleUtils.color("[-H:-+" +
-                getHealth() +
-                "+][#M:#+23+]") + ">");
+        socketWriter.write(new MessageBuilder()
+                .append("[")
+                .append("H:", Color.red)
+                .append(getHealth(), Color.green)
+                .append("]")
+                .append("M:", Color.cyan)
+                .append(23, Color.green)
+                .append("]>")
+                .toString());
         socketWriter.flush();
     }
 
     public void sendMessage(String message) {
-        sendMessage(message, true, true);
+        sendMessage(message, true);
     }
 
-    public void sendMessage(String message, boolean withColor, boolean withStatus) {
-        String out;
-        if (withColor) {
-            out = ConsoleUtils.color(message);
-        } else {
-            out = message;
-        }
-        socketWriter.println(out);
+    public void sendMessage(String message, boolean withStatus) {
+        socketWriter.println(message);
         if (withStatus) {
             updateStatus();
         } else {

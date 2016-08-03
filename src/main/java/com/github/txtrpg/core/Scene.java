@@ -1,5 +1,7 @@
 package com.github.txtrpg.core;
 
+import com.github.txtrpg.message.Color;
+import com.github.txtrpg.message.MessageBuilder;
 import org.neo4j.graphdb.Direction;
 import org.springframework.data.neo4j.annotation.Fetch;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
@@ -79,19 +81,18 @@ public class Scene extends Entity implements Observable {
 
     @Override
     public String getDescription() {
-        final StringBuilder builder = new StringBuilder(super.getDescription());
+        final MessageBuilder messageBuilder = new MessageBuilder().parse(super.getDescription());
         ground.stream().forEach(it -> {
-            builder.append("\n\r")
-                    .append(it.getDescription());
+            messageBuilder.br()
+                    .parse(it.getDescription());
         });
         exits.stream().forEach(e -> {
-            builder.append("\n\r")
-                    .append("*")
-                    .append(e.getDir().getDirection())
-                    .append("*: to ")
+            messageBuilder.br()
+                    .append(e.getDir().getDirection(), Color.blue)
+                    .append(": to ")
                     .append(e.getTo().getName());
         });
-        return builder.toString();
+        return messageBuilder.toString();
     }
 
     @Override

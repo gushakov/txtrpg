@@ -9,7 +9,6 @@ import com.github.txtrpg.message.MessageBuilder;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * @author gushakov
@@ -31,7 +30,7 @@ public class DisambiguateAction extends Action {
     protected void processForPlayer(Collection<Action> actions, Player player) {
         final MessageBuilder builder = new MessageBuilder()
                 .append("There are several of those here:")
-                .withColumns(ColumnLayout.list);
+                .withColumns(ColumnLayout.Double);
 
         for (int i = 0; i < candidates.size(); i++) {
              builder.append(i + 1, Color.cyan).append(":")
@@ -42,7 +41,7 @@ public class DisambiguateAction extends Action {
         }
         builder.end();
 
-        player.sendMessage(builder.toString(), true, true);
+        player.sendMessage(builder.toString(), true);
     }
 
 }

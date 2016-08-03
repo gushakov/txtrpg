@@ -4,6 +4,8 @@ import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Observable;
 import com.github.txtrpg.core.Player;
 import com.github.txtrpg.core.Visible;
+import com.github.txtrpg.message.ColumnLayout;
+import com.github.txtrpg.message.MessageBuilder;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,22 +37,21 @@ public class LookAction extends Action {
             if (actor instanceof Player) {
                 Player player = (Player) actor;
                 if (target != null) {
-                    final StringBuilder builder = new StringBuilder(target.getDescription());
+                    final MessageBuilder messageBuilder = new MessageBuilder().parse(target.getDescription());
                     if (target instanceof Observable) {
-                        builder.append(" Looking inside you find:");
+                        messageBuilder.append(" Looking inside you find:").withColumns(ColumnLayout.Single);
                         ((Observable) target).showTo(player)
-                                .forEach(visible -> builder.append("\n\r> ").append(visible.getName()));
+                                .forEach(visible -> messageBuilder.append(visible.getName()).tab());
+                        messageBuilder.end();
                     }
-                    player.sendMessage(builder.toString());
+                    player.sendMessage(messageBuilder.toString());
                 } else {
+                    final MessageBuilder messageBuilder = new MessageBuilder(player.getLocation().getDescription()).br();
                     final Collection<Visible> visibles = player.getLocation().showTo(player);
-                    if (visibles.isEmpty()) {
-                        player.sendMessage(player.getLocation().getDescription());
-                    } else {
-                        player.sendMessage(player.getLocation().getDescription(), true, false);
-                        visibles.stream()
-                                .forEach(v -> player.sendMessage(v.getDescription()));
+                    if (!visibles.isEmpty()) {
+                        visibles.stream().forEach(v -> messageBuilder.parse(v.getDescription()));
                     }
+                    player.sendMessage(messageBuilder.toString());
                 }
             }
             return Collections.emptyList();

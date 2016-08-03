@@ -23,9 +23,9 @@ public class WelcomeAction extends Action {
             Actor actor = getInitiator();
             if (actor instanceof Player) {
                 Player player = (Player) actor;
-                player.sendMessage("+-------------------------------------------+", false, false);
-                player.sendMessage("|             *WELCOME*                       |", true, false);
-                player.sendMessage("+-------------------------------------------+", false, false);
+                player.sendMessage("+-------------------------------------------+", false);
+                player.sendMessage("|             *WELCOME*                       |", false);
+                player.sendMessage("+-------------------------------------------+", false);
 
                 actions.add(new LookAction(player));
             }

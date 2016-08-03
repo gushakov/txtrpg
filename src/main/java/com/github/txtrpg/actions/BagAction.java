@@ -23,7 +23,7 @@ public class BagAction extends Action {
                     builder.append(String.format("%s %10s\n\r", item.getName(), "[#"+item.getWeight()+"#]"));
                 });
 
-        player.sendMessage(builder.toString(), true, true);
+        player.sendMessage(builder.toString(), true);
 
     }
 }

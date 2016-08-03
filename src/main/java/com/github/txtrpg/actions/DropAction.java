@@ -3,6 +3,8 @@ package com.github.txtrpg.actions;
 import com.github.txtrpg.core.Actor;
 import com.github.txtrpg.core.Item;
 import com.github.txtrpg.core.Player;
+import com.github.txtrpg.message.Color;
+import com.github.txtrpg.message.MessageBuilder;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
@@ -27,17 +29,19 @@ public class DropAction extends Action {
 
     @Override
     protected void processForPlayer(Collection<Action> actions, Player player) {
-        if (item != null){
+        final MessageBuilder messageBuilder = new MessageBuilder();
+        if (item != null) {
             try {
                 player.getBag().remove(item);
                 player.getLocation().getGround().put(item);
-                player.sendMessage("You dropped _" + item + "_ to the ground.");
+                player.sendMessage(messageBuilder.append("You dropped ")
+                        .append(item.toString(), Color.yellow)
+                        .append(" to the ground").toString());
             } finally {
                 item.unlock();
             }
-        }
-        else {
-            player.sendMessage("Drop -what-?");
+        } else {
+            player.sendMessage(messageBuilder.append("Drop ").append("what", Color.red).append("?").toString());
         }
     }
 }

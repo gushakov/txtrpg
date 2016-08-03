@@ -5,8 +5,8 @@ package com.github.txtrpg.message;
  */
 public enum ColumnLayout {
 
-    list(2, "%s\t%s")
-    ;
+    Single(1, "%s"),
+    Double(2, "%s\t%s");
 
     private int numOfColumns;
     private String template;

@@ -16,7 +16,7 @@ public class MessageBuilderTest {
     public void testMessageBuilder() throws Exception {
         String message = new MessageBuilder()
                 .append("You see:")
-                .withColumns(ColumnLayout.list)
+                .withColumns(ColumnLayout.Double)
                 .append("1.")
                 .tab()
                 .append("bar")
@@ -30,6 +30,14 @@ public class MessageBuilderTest {
                 .append("wam")
                 .end()
                 .toString();
+        System.out.println(message);
+    }
+
+    @Test
+    public void testParse() throws Exception {
+//        String message = new MessageBuilder().parse("This a _test_, this is a test.").toString();
+//        System.out.println(message);
+        String message = new MessageBuilder().parse("A small yellow #butterfly# flutters around aimlessly.").toString();
         System.out.println(message);
     }
 
