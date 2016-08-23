@@ -4,6 +4,8 @@ import com.github.txtrpg.actions.*;
 import com.github.txtrpg.antlr4.CommandParser;
 import com.github.txtrpg.core.Entity;
 import com.github.txtrpg.core.Player;
+import com.github.txtrpg.message.Color;
+import com.github.txtrpg.message.MessageBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +26,7 @@ public abstract class AbstractCommandProcessor {
         this.player = player;
     }
 
-    public Action process(){
+    public Action process() {
         final String param1 = parser.getParam1();
         final String param2 = parser.getParam2();
         final String param3 = parser.getParam3();
@@ -53,7 +55,11 @@ public abstract class AbstractCommandProcessor {
                 }
 
                 // no candidates for target
-                return new ErrorAction(player, "There are no -%s- here", param1);
+                return new ErrorAction(player,
+                        new MessageBuilder("There are no ")
+                                .append(param1, Color.red)
+                                .append(" here")
+                                .toString(), param1);
             case 3:
                 logger.debug("Case 3: param1: {}, param2: {}", param1, param2);
                 // get all candidates
@@ -105,7 +111,11 @@ public abstract class AbstractCommandProcessor {
                 }
 
                 // no candidates for context
-                return new ErrorAction(player, "There are no -%s- here", param3);
+                return new ErrorAction(player,
+                        new MessageBuilder("There are no ")
+                                .append(param1, Color.red)
+                                .append(" here")
+                                .toString(), param3);
 
             default:
                 throw new RuntimeException("Cannot interpret command structure.");
